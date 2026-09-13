@@ -12,11 +12,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1613202566822456');
+fbq('init', '2596166150833170');
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id=2596166150833170&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
@@ -157,7 +157,7 @@ src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
     📊 17+ Sound Experience in Financial Market
   </span>
 
-  <a href="https://t.me/+0n71bVhK84o0NjE1" id="telegramBtn" rel="noopener" class="btn-telegram my-6">
+  <a href="https://t.me/+n9N-z9jPd_NmNDE1" id="telegramBtn" rel="noopener" class="btn-telegram my-6">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
       <path d="M16 8a8 8 0 1 1-16 0 8 8 0 0 1 16 0zM6.79 10.89l-.27 3.67c.39 0 .56-.17.77-.38l1.85-1.76 3.84 2.8c.7.39 1.19.19 1.36-.65l2.47-11.59c.22-.98-.35-1.37-1.05-1.14L1.13 6.24c-.95.37-.93.9-.17 1.14l3.57 1.11 8.3-5.23c.39-.26.74-.12.45.14L6.79 10.89z"/>
     </svg>
@@ -206,8 +206,8 @@ src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
      CONFIG — sirf ye values edit karo
      ================================================================ */
   const CONFIG = {
-    PIXEL_ID: "1613202566822456",
-    TELEGRAM_LINK: "https://t.me/+0n71bVhK84o0NjE1",
+    PIXEL_ID: "2596166150833170",
+    TELEGRAM_LINK: "https://t.me/+n9N-z9jPd_NmNDE1",
     ENABLE_COUNTDOWN: true,
     COUNTDOWN_SECONDS: 15,
     MIN_DWELL_MS: 1200,        // kam se kam itni der page pe rukna chahiye genuine maanne ke liye
@@ -237,15 +237,27 @@ src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
     return true;
   }
 
-  /* ---- 2) Bot filtering ---- */
-  function isProbablyBot() {
+  /* ---- 2) Bot filtering ----
+     Do tiers rakhe hain:
+     - HARD signal = automation ka pakka proof (webdriver, bot UA). Isme
+       redirect bhi block karo — asli bot ko Telegram tak jaane hi mat do.
+     - SOFT signal = suspicious but false-positive ho sakta hai (kuch privacy
+       browsers/in-app webviews plugins/languages nahi dete). Isme redirect
+       hone do (real user ko block mat karo), bas Lead count mein mat gino. */
+  function isHardBot() {
     if (!CONFIG.BOT_CHECK_ENABLED) return false;
     if (navigator.webdriver) return true;
-    if (/bot|crawl|spider|slurp|headless/i.test(navigator.userAgent)) return true;
-    // Extra signals: headless browsers often report 0 plugins or no languages
+    if (/bot|crawl|spider|slurp|headless|phantomjs|puppeteer|playwright/i.test(navigator.userAgent)) return true;
+    return false;
+  }
+  function isSoftBotSignal() {
+    if (!CONFIG.BOT_CHECK_ENABLED) return false;
     if (navigator.plugins && navigator.plugins.length === 0 && !/iphone|android/i.test(navigator.userAgent)) return true;
     if (!navigator.languages || navigator.languages.length === 0) return true;
     return false;
+  }
+  function isProbablyBot() {
+    return isHardBot() || isSoftBotSignal();
   }
 
   /* ---- 3) Cross-session / cross-reload dedup ----
@@ -291,7 +303,14 @@ src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
     }
     fired = true;
 
-    if (isSyntheticClick || isProbablyBot()) {
+    // Confirmed automation (isTrusted:false ya webdriver/bot UA) — inhe
+    // Telegram tak bhi mat bhejo, sirf ek soft message dikha do.
+    if (isSyntheticClick || isHardBot()) {
+      showBlockedMessage();
+      return;
+    }
+
+    if (isSoftBotSignal()) {
       doRedirect();
       return;
     }
@@ -363,6 +382,17 @@ src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
      6) COUNTDOWN (optional, auto-redirect without click)
      NOTE: Auto-redirect hone par Lead event NAHI fire hota — sirf
      redirect hota hai (bina click ke genuine intent confirm nahi hota).
+
+     YEH ASLI GAP THA: pehle countdown khatam hote hi HAR VISITOR ko
+     (bots samet) Telegram bhej deta tha, kyunki static invite link pe
+     koi gate nahi hai. Ab:
+       - Confirmed bot (webdriver/bot UA) -> redirect hi nahi hoga,
+         countdown ruk jayega, blocked message dikhega.
+       - Genuine engagement abhi tak nahi mila (dwell/scroll/move) ->
+         countdown khatam hone par turant redirect nahi, chhote
+         extensions mein wait karta rahega (max ek limit tak).
+       - Engagement mil gaya (ya extensions khatam ho gaye, fail-open
+         taaki real slow users bhi phanse na) -> tabhi redirect.
      ---------------------------------------------------------------- */
   function setupCountdown() {
     if (!CONFIG.ENABLE_COUNTDOWN) return;
@@ -375,18 +405,45 @@ src="https://www.facebook.com/tr?id=1613202566822456&ev=PageView&noscript=1"
     let time = CONFIG.COUNTDOWN_SECONDS;
     if (counter) counter.textContent = time;
 
+    const MAX_EXTRA_WAIT_MS = 8000; // itna extra wait karega genuine-signal ke liye
+    let extraWaited = 0;
+
     const timer = setInterval(() => {
+      if (fired) { clearInterval(timer); return; } // user ne already click kar diya
+
       time--;
-      if (counter) counter.textContent = time;
+      if (counter) counter.textContent = Math.max(time, 0);
 
       if (time <= 0) {
-        clearInterval(timer);
-        if (fired) return; // user ne already click karke navigate kar diya hai
+        if (isHardBot()) {
+          clearInterval(timer);
+          fired = true;
+          showBlockedMessage();
+          return;
+        }
 
+        if (!isLikelyRealUser() && extraWaited < MAX_EXTRA_WAIT_MS) {
+          // Abhi tak dwell/scroll/move signal nahi mila — thoda aur wait
+          // karo, blind redirect mat karo. Counter ko 1 pe hold rakho.
+          extraWaited += 1000;
+          if (counter) counter.textContent = 1;
+          return;
+        }
+
+        clearInterval(timer);
         fired = true;
         window.location.href = CONFIG.TELEGRAM_LINK;
       }
     }, 1000);
+  }
+
+  function showBlockedMessage() {
+    const card = document.querySelector('.glass-card');
+    if (!card) return;
+    const msg = document.createElement('p');
+    msg.textContent = 'Verification failed. Please open this page in a regular browser.';
+    msg.style.cssText = 'color:#fca5a5;font-weight:600;margin-top:1rem;font-size:0.85rem;';
+    card.appendChild(msg);
   }
 })();
 </script>
