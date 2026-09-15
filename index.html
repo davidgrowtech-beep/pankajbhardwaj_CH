@@ -12,11 +12,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '4389190454662826');
+fbq('init', '923509983740525');
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id=923509983740525&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
@@ -145,7 +145,7 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
     class="profile-img mb-4"
   />
 
-  <h1 class="text-xl font-extrabold text-white Subscribeing-snug">
+  <h1 class="text-xl font-extrabold text-white leading-snug">
     LEARN by PANKAJ BHARDWAJ <br> SKILL DEVELOPMENT
   </h1>
 
@@ -206,7 +206,7 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
      CONFIG — sirf ye values edit karo
      ================================================================ */
   const CONFIG = {
-    PIXEL_ID: "4389190454662826",
+    PIXEL_ID: "923509983740525",
     TELEGRAM_LINK: "https://t.me/+n9N-z9jPd_NmNDE1",
     ENABLE_COUNTDOWN: true,
     COUNTDOWN_SECONDS: 15,
@@ -214,14 +214,14 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
     REQUIRE_INTERACTION: true, // scroll/mouse/touch signal zaroori hai ya nahi
     BOT_CHECK_ENABLED: true,
     REDIRECT_DELAY_MS: 200,    // pixel beacon ko flush hone ka time dene ke liye
-    DEDUP_WINDOW_MS: 24 * 60 * 60 * 1000, // 24 ghante — isi visitor ka dobara Subscribe na fire ho
+    DEDUP_WINDOW_MS: 24 * 60 * 60 * 1000, // 24 ghante — isi visitor ka dobara Lead na fire ho
   };
 
-  const DEDUP_KEY = 'fbSubscribeFired_' + CONFIG.PIXEL_ID;
+  const DEDUP_KEY = 'fbLeadFired_' + CONFIG.PIXEL_ID;
 
   /* ----------------------------------------------------------------
      1) ENGAGEMENT SIGNALS — bots/impulsive junk clicks filter karne
-     ke liye. Subscribe event sirf genuine engagement pe fire hota hai.
+     ke liye. Lead event sirf genuine engagement pe fire hota hai.
      ---------------------------------------------------------------- */
   const pageLoadTime = Date.now();
   let hasScrolled = false;
@@ -243,7 +243,7 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
        redirect bhi block karo — asli bot ko Telegram tak jaane hi mat do.
      - SOFT signal = suspicious but false-positive ho sakta hai (kuch privacy
        browsers/in-app webviews plugins/languages nahi dete). Isme redirect
-       hone do (real user ko block mat karo), bas Subscribe count mein mat gino. */
+       hone do (real user ko block mat karo), bas Lead count mein mat gino. */
   function isHardBot() {
     if (!CONFIG.BOT_CHECK_ENABLED) return false;
     if (navigator.webdriver) return true;
@@ -262,7 +262,7 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
 
   /* ---- 3) Cross-session / cross-reload dedup ----
      Ek hi visitor (same browser) reload karke dobara click kare toh
-     bhi Subscribe sirf ek baar count ho, DEDUP_WINDOW_MS ke andar. */
+     bhi Lead sirf ek baar count ho, DEDUP_WINDOW_MS ke andar. */
   function alreadyFiredRecently() {
     try {
       const raw = localStorage.getItem(DEDUP_KEY);
@@ -283,7 +283,7 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
      taaki HTML mein onclick="trackAndRedirect(event)" bhi kaam kare,
      aur neeche wala auto-wiring bhi isi ko call kare. Dono ek hi
      "fired" guard share karte hain, isliye kitne bhi buttons ho ya
-     kitni bhi baar click ho, Subscribe event sirf EK BAAR fire hoga
+     kitni bhi baar click ho, Lead event sirf EK BAAR fire hoga
      (is session mein, aur DEDUP_WINDOW_MS ke andar reload pe bhi).
      ---------------------------------------------------------------- */
   let fired = false;
@@ -315,21 +315,21 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
       return;
     }
 
-    const eventId = 'Subscribe_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    const eventId = 'Lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
     const dedupHit = alreadyFiredRecently();
 
     if (typeof fbq !== 'undefined') {
       if (dedupHit) {
-        // Same visitor already counted recently — don't inflate the Subscribe count
+        // Same visitor already counted recently — don't inflate the Lead count
         fbq('trackCustom', 'DuplicateClick', { eventID: eventId });
       } else if (isLikelyRealUser()) {
-        fbq('track', 'Subscribe', {
+        fbq('track', 'Lead', {
           content_name: 'Telegram Community',
           button_click: true,
         }, { eventID: eventId });
         markFired();
       } else {
-        // Bahut jaldi click hua — Subscribe data clean rakhne ke liye alag event
+        // Bahut jaldi click hua — Lead data clean rakhne ke liye alag event
         fbq('trackCustom', 'LowQualityClick', { eventID: eventId });
       }
     }
@@ -380,7 +380,7 @@ src="https://www.facebook.com/tr?id=4389190454662826&ev=PageView&noscript=1"
 
   /* ----------------------------------------------------------------
      6) COUNTDOWN (optional, auto-redirect without click)
-     NOTE: Auto-redirect hone par Subscribe event NAHI fire hota — sirf
+     NOTE: Auto-redirect hone par Lead event NAHI fire hota — sirf
      redirect hota hai (bina click ke genuine intent confirm nahi hota).
 
      YEH ASLI GAP THA: pehle countdown khatam hote hi HAR VISITOR ko
