@@ -391,31 +391,90 @@ src="https://www.facebook.com/tr?id=910867071891628&ev=PageView&noscript=1"
   </div>
 </div>
 
+<style>
+  .ios-webview-banner{
+    background:var(--bronze); color:var(--ink); font-size:13px; line-height:1.4;
+    padding:10px 14px; text-align:center; position:relative; z-index:5;
+  }
+  .ios-webview-banner b{ text-decoration:underline; }
+</style>
 <script>
 (function(){
   "use strict";
 
   /* ============================================================
-     CONFIG — edit these two lines only
+     CONFIG — edit this one line only
      ============================================================ */
   var TELEGRAM_URL = "https://t.me/+0n71bVhK84o0NjE1";
-  var REDIRECT_DELAY_MS = 350; // small delay so the pixel event has time to fire
 
-  /* ---------- Wire every Telegram button to the same link ---------- */
   var allBtns = document.querySelectorAll('#telegramBtnHero, #telegramBtnFinal, #telegramBtnSticky');
-  allBtns.forEach(function(btn){ btn.setAttribute('href', TELEGRAM_URL); });
+
+  /* ---------- Detect Facebook / Instagram in-app browser ----------
+     Most of the Meta-click-to-Telegram-join gap on Android happens here:
+     FB/IG's own in-app browser refuses to hand t.me links to the real
+     Telegram app, so the "join" silently opens as a dead web page.
+     Fix: force the link open in Chrome instead (via an intent:// URL),
+     which DOES hand off to the Telegram app correctly.
+     iOS has no equivalent JS escape, so we show a one-line banner
+     telling the visitor to tap "Open in Safari" instead.
+     ============================================================ */
+  var ua = navigator.userAgent || '';
+  var isFBIG   = /FBAN|FBAV|Instagram/i.test(ua);
+  var isAndroid = /Android/i.test(ua);
+  var isIOS     = /iPhone|iPad|iPod/i.test(ua);
+
+  function buildHref(url){
+    if (isFBIG && isAndroid) {
+      var stripped = url.replace(/^https?:\/\//, '');
+      return 'intent://' + stripped + '#Intent;scheme=https;package=com.android.chrome;end';
+    }
+    return url;
+  }
+
+  allBtns.forEach(function(btn){ btn.setAttribute('href', buildHref(TELEGRAM_URL)); });
+
+  if (isFBIG && isIOS) {
+    var banner = document.createElement('div');
+    banner.className = 'ios-webview-banner sans';
+    banner.innerHTML = 'Telegram yahan theek se nahi khulega — top-right mein <b>⋯</b> dabaakar <b>"Open in Safari"</b> chunein.';
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
 
   /* ---------- Footer year ---------- */
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* ============================================================
+     Bot / automation detection — gates the PIXEL EVENT ONLY.
+     The visitor's navigation is never touched by this section.
+     ============================================================ */
+  function automationDetected(){
+    try {
+      if (navigator.webdriver) return true;
+      if (/HeadlessChrome|Puppeteer|Selenium|PhantomJS/i.test(ua)) return true;
+      if (!isAndroid && !isIOS &&
+          navigator.plugins && navigator.plugins.length === 0 &&
+          navigator.languages && navigator.languages.length === 0) return true;
+      if (window.callPhantom || window._phantom || window.__nightmare) return true;
+    } catch (e) {}
+    return false;
+  }
+
+  /* ============================================================
      META PIXEL — Subscribe event, fired once per real user click
      - sessionStorage dedup: never double-fire in the same session
-     - isTrusted check: ignores synthetic/bot-dispatched clicks
+     - isTrusted / automation check: ignores synthetic/bot clicks
      - dwell-time + human-interaction gate: ignores instant/bot clicks
-     - fires from the actual click handler, then redirects
-     (visitor is always redirected — only the pixel event is gated)
+     ------------------------------------------------------------
+     CRITICAL FIX vs the old version: this handler no longer calls
+     preventDefault() or setTimeout() before navigating. It fires the
+     pixel synchronously and lets the browser's OWN click-triggered
+     navigation happen immediately. Delaying navigation — even by a
+     few hundred ms — burns the short "user activation" window mobile
+     OSes need to hand the link off to the Telegram app; the OS then
+     falls back to a bare web page instead of opening the app, and
+     that page never counts as a real Telegram join. This was almost
+     certainly why Meta showed far more results than Telegram did.
      ============================================================ */
   var FIRED_KEY = 'lwg_subscribe_fired_v1';
   var MIN_DWELL_MS = 1200;
@@ -442,14 +501,9 @@ src="https://www.facebook.com/tr?id=910867071891628&ev=PageView&noscript=1"
 
   function handleTelegramClick(e){
     var btn = e.currentTarget;
-    var url = btn.getAttribute('href') || TELEGRAM_URL;
 
-    if (e.isTrusted === false) {
-      window.location.href = url;
-      return;
-    }
-
-    e.preventDefault();
+    // Bots / synthetic clicks: don't block their navigation, just skip the pixel.
+    if (e.isTrusted === false || automationDetected()) return;
 
     var dwellOk = (Date.now() - pageLoadTime) >= MIN_DWELL_MS;
     var looksGenuine = dwellOk && hadHumanInteraction && document.visibilityState !== 'hidden';
@@ -461,10 +515,7 @@ src="https://www.facebook.com/tr?id=910867071891628&ev=PageView&noscript=1"
       }, { eventID: genuineClickId() });
       markFired();
     }
-
-    window.setTimeout(function(){
-      window.location.href = url;
-    }, REDIRECT_DELAY_MS);
+    // No preventDefault, no setTimeout — the real <a href> navigates on its own.
   }
 
   allBtns.forEach(function(btn){
