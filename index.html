@@ -694,7 +694,7 @@
 
   let pageViewTracked = false;
 
-  let subscribeTracked = false;
+  let LeadTracked = false;
 
   let navigationStarted = false;
 
@@ -1038,7 +1038,7 @@
 
       isQualifiedClick &&
 
-      !subscribeTracked &&
+      !LeadTracked &&
 
       typeof window.fbq === 'function'
 
@@ -1048,7 +1048,7 @@
 
         'track',
 
-        'Subscribe',
+        'Lead',
 
         {
 
@@ -1068,7 +1068,7 @@
       );
 
 
-      subscribeTracked = true;
+      LeadTracked = true;
 
     }
 
