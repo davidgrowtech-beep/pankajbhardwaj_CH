@@ -85,7 +85,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:16px 0 22px}
 <main class="wrap">
   <section class="lvl" aria-labelledby="lh">
     <h2 id="lh">आप कहाँ से शुरू करना चाहते हैं?<small>Where would you like to start?</small></h2>
-    <p class="hint">👇 एक विकल्प चुनें · Choose one option</p>
+    <p class="hint">👇 अपना स्तर चुनें (वैकल्पिक) · Choose your level (optional)</p>
     <div class="opts" id="opts" role="group" aria-label="Choose your level">
       <button type="button" data-lvl="Beginner" aria-pressed="false"><span class="e">🌱</span><div><b>बिल्कुल नया हूँ</b><span>I am a complete beginner</span></div></button>
       <button type="button" data-lvl="Intermediate" aria-pressed="false"><span class="e">📘</span><div><b>थोड़ी जानकारी है</b><span>I know some basics</span></div></button>
@@ -94,11 +94,11 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:16px 0 22px}
   </section>
 
   <section class="joinbox">
-    <a class="tg locked" id="tg" href="https://t.me/+n9N-z9jPd_NmNDE1" rel="noopener">
+    <a class="tg" id="tg" href="https://t.me/+n9N-z9jPd_NmNDE1" rel="noopener">
       <span class="plane"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.8 15.6l-.4 4.2c.6 0 .9-.3 1.2-.6l2.9-2.7 6 4.4c1.1.6 1.9.3 2.2-1L23.9 4.7c.4-1.6-.6-2.3-1.6-1.9L1.3 10.9c-1.5.6-1.5 1.4-.3 1.8l5.4 1.7L19 6.5c.6-.4 1.1-.2.7.2z"/></svg></span>
       <span class="txt"><b>टेलीग्राम चैनल जॉइन करें</b><small>Join Telegram Channel · Free</small></span>
     </a>
-    <p id="selnote" aria-live="polite">पहले ऊपर से एक विकल्प चुनें · Choose an option first</p>
+    <p id="selnote" aria-live="polite">अपना स्तर चुनना वैकल्पिक है · Choosing a level is optional</p>
     <div id="iosnote" class="en">📱 For best results open this page in Safari / Chrome (tap ⋯ → “Open in browser”).<br>बेहतर अनुभव के लिए पेज को Safari / Chrome में खोलें।</div>
   </section>
 
@@ -122,9 +122,9 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:16px 0 22px}
   var CONFIG = {
     pixelId:'1608999037574877',
     tgLink:'https://t.me/+n9N-z9jPd_NmNDE1',
-    pageViewDelayMs:3000,      // PageView only after 3s visible + real interaction
-    passiveReaderDelayMs:8000, // or 8s of visible reading
-    minClickTimeMs:2000,       // clicks before 2s are ignored
+    pageViewDelayMs:0,         // PageView fires on load (bots excluded)
+    passiveReaderDelayMs:0,
+    minClickTimeMs:1500,       // Lead ignores taps before 1.5s (button itself always works)
     leadWindowMs:10000         // Lead only if the page really goes to background within 10s of the click
   };
   var t0 = Date.now(), human = false, visibleMs = 0, lastVis = document.hidden ? 0 : Date.now();
@@ -168,35 +168,27 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:16px 0 22px}
     }
   }
   setInterval(maybePV, 500);
+  maybePV();
 
   // level picker (trusted taps only)
   opts.addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b || !e.isTrusted || isBot) return;
     opts.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
     b.setAttribute('aria-pressed','true'); chosen = b.getAttribute('data-lvl');
-    tg.classList.remove('locked'); note.style.color = '#157347';
+    note.style.color = '#157347';
     note.textContent = '✓ चयन हो गया · अब चैनल जॉइन करें';
   });
 
   // in-app browser handling
   var ua = navigator.userAgent || '';
   var inApp = /FBAN|FBAV|FB_IAB|Instagram/i.test(ua), isAndroid = /Android/i.test(ua), isIOS = /iPhone|iPad|iPod/i.test(ua);
-  if (inApp && isAndroid){
-    tg.setAttribute('href','intent://' + CONFIG.tgLink.replace('https://','') + '#Intent;scheme=https;package=org.telegram.messenger;S.browser_fallback_url=' + encodeURIComponent(CONFIG.tgLink) + ';end');
-  } else if (inApp && isIOS){ document.getElementById('iosnote').style.display = 'block'; }
+  // Button always keeps the normal https://t.me link (no intent:// rewrite, nothing that can break navigation)
+  if (inApp){ document.getElementById('iosnote').style.display = 'block'; }
 
   // CTA click: validate, DO NOT fire Lead yet - just arm it. Native navigation, no delay.
   tg.addEventListener('click', function(e){
-    if (!e.isTrusted || isBot){ e.preventDefault(); return; }
-    if (!chosen){
-      e.preventDefault();
-      note.style.color = '#b11212';
-      note.textContent = '👆 कृपया पहले एक विकल्प चुनें · Please choose an option first';
-      opts.classList.remove('shake'); void opts.offsetWidth; opts.classList.add('shake');
-      opts.scrollIntoView({behavior:'smooth', block:'center'});
-      return;
-    }
-    // Real user is never blocked from reaching Telegram; filtering applies only to the Lead event
+    // Never preventDefault: a tap on the button always opens Telegram. Filtering applies only to the Lead event.
+    if (!e.isTrusted || isBot) return;
     var qualified = !(Date.now() - t0 < CONFIG.minClickTimeMs || !human);
     if (qualified && ss(KEY_LD) !== '1' && !leadSent) pending = Date.now();
   }, false);
@@ -208,7 +200,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:16px 0 22px}
     if (Date.now() - pending > CONFIG.leadWindowMs) { pending = null; return; }
     leadSent = true; ss(KEY_LD,'1'); pending = null;
     if (typeof fbq === 'function'){
-      try{ fbq('track','Lead',{content_name:'Learn Proven and Advanced Skills with Pankaj', content_category:chosen},{eventID:'lead_' + t0 + '_' + Math.random().toString(36).slice(2,8)}); }catch(e){}
+      try{ fbq('track','Lead',{content_name:'Learn Proven and Advanced Skills with Pankaj', content_category:(chosen||'NotSelected')},{eventID:'lead_' + t0 + '_' + Math.random().toString(36).slice(2,8)}); }catch(e){}
     }
   }
   function onHidden(){ sendLead(); }
@@ -216,6 +208,6 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:16px 0 22px}
   window.addEventListener('blur', function(){ setTimeout(sendLead,50); });
 })();
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1792719455195011&ev=PageView&noscript=1"/></noscript>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1608999037574877&ev=PageView&noscript=1"/></noscript>
 </body>
 </html>
