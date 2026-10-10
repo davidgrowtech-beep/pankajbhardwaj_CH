@@ -105,6 +105,9 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
 
 @media(min-width:521px){.wrap{padding-top:10px}}
 @media(max-width:360px){.opts{gap:8px}.opt b{font-size:12.5px}.me img{width:50px;height:50px}.brand strong{font-size:14.5px}}
+.back{position:fixed;left:12px;right:12px;bottom:80px;z-index:70;max-width:496px;margin:0 auto;background:var(--orange);color:#1b1000;border-radius:14px;padding:12px 14px;font-weight:800;font-size:13.5px;line-height:1.4;box-shadow:0 8px 28px rgba(0,0,0,.5);display:none}
+.back a{display:block;margin-top:8px;background:#071426;color:#fff;text-align:center;padding:10px;border-radius:10px;font-weight:800}
+.back small{display:block;font-weight:600;opacity:.85}
 </style>
 </head>
 <body>
@@ -120,7 +123,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
         <span>Pankaj Bhardwaj</span>
         <small class="hi">आपके मार्गदर्शक</small>
       </div>
-      <img src="pkj.jpeg">
+      <img src="pkj.jpeg" alt="Pankaj Bhardwaj">
     </div>
   </header>
 
@@ -157,7 +160,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
       <div class="pick hi" id="pick" aria-live="polite"></div>
     </div>
 
-    <a class="btn pulse join-link" href="https://t.me/+n9N-z9jPd_NmNDE1">
+    <a class="btn pulse join-link" href="https://t.me/+0n71bVhK84o0NjE1">
       <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
       <span class="hi">टेलीग्राम पर फ्री जुड़ें · Join Free</span>
     </a>
@@ -183,7 +186,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
   <div class="join">
     <h2 class="hi">आज ही सीखना शुरू करें</h2>
     <p class="hi">Start learning today · 100% फ्री</p>
-    <a class="btn join-link" href="https://t.me/+n9N-z9jPd_NmNDE1">
+    <a class="btn join-link" href="https://t.me/+0n71bVhK84o0NjE1">
       <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
       <span class="hi">टेलीग्राम चैनल खोलें · Open Telegram</span>
     </a>
@@ -195,7 +198,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
   </div>
 </div>
 
-<a class="float join-link" href="https://t.me/+n9N-z9jPd_NmNDE1" aria-label="Join Telegram">
+<a class="float join-link" href="https://t.me/+0n71bVhK84o0NjE1" aria-label="Join Telegram">
   <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
   <span>Telegram</span>
 </a>
@@ -206,29 +209,34 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
 
 const CONFIG = Object.freeze({
   pixelId: '1753758439247458',
-  telegramUrl: 'https://t.me/+n9N-z9jPd_NmNDE1',
-  minimumClickTimeMs: 800,
-  trackedRedirectDelayMs: 700,
-  fastRedirectDelayMs: 50
+  telegramUrl: 'https://t.me/+0n71bVhK84o0NjE1',
+  telegramInvite: '0n71bVhK84o0NjE1',
+  event: 'Lead',
+  /* Filters apply ONLY to the pixel event. Telegram link is always present and always opens. */
+  ignoreClickMs: 1000,   // tap in first 1s: Telegram still opens, no Lead
+  minMovePx: 60,         // real scroll / swipe / mouse movement
+  minEngagedMs: 1500,    // ...and stay this long after first real movement
+  minDwellMs: 3000,      // total VISIBLE time before a tap counts as Lead
+  dedupHours: 24,        // one Lead per device per 24h
+  reportFiltered: true   // custom "FilteredClick" event with reason (diagnostics only)
 });
 
-const openedAt = Date.now();
-let leadSent = false;
-let redirecting = false;
-let selected = [];
+const ua = navigator.userAgent || '';
+const isAndroid = /Android/i.test(ua);
+const isIOS = /iPhone|iPad|iPod/i.test(ua);
+const inApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram/i.test(ua);
+const isBot = navigator.webdriver === true || /bot|crawl|spider|facebookexternalhit|Facebot|TelegramBot|HeadlessChrome|Lighthouse|PhantomJS|Selenium|Puppeteer|Playwright/i.test(ua);
 
-/* Meta Pixel: init only, Lead event only */
+let selected = [];
+let sent = false, reported = false, clickedAt = 0;
+
+/* Meta Pixel */
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=true;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=true;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', CONFIG.pixelId);
+fbq('track', 'PageView');
 
 function eventId() {
   return 'lead_' + (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random().toString(36).slice(2, 10));
-}
-
-function automated() {
-  if (navigator.webdriver === true) return true;
-  const ua = navigator.userAgent.toLowerCase();
-  return ['headless','phantomjs','selenium','puppeteer','playwright','crawler','spider','facebookexternalhit','googlebot','bingbot'].some(w => ua.includes(w));
 }
 
 /* ---- topic chooser (optional, never blocks Telegram) ---- */
@@ -237,45 +245,126 @@ document.querySelectorAll('.opt').forEach(btn => {
   btn.addEventListener('click', () => {
     const on = btn.getAttribute('aria-pressed') === 'true';
     btn.setAttribute('aria-pressed', on ? 'false' : 'true');
-    selected = Array.from(document.querySelectorAll('.opt[aria-pressed="true"]')).map(b => b.dataset.topic);
-    const hi = Array.from(document.querySelectorAll('.opt[aria-pressed="true"]')).map(b => b.dataset.hi);
+    const act = Array.from(document.querySelectorAll('.opt[aria-pressed="true"]'));
+    selected = act.map(b => b.dataset.topic);
+    const hi = act.map(b => b.dataset.hi);
     pickBox.textContent = hi.length ? '✓ चुना गया: ' + hi.join(', ') : '';
   });
 });
 
-/* ---- Telegram: always open; Lead fired once ---- */
-function onJoin(event) {
-  event.preventDefault();
-  if (redirecting) return;
-  redirecting = true;
+/* ---- persistent de-dupe (localStorage + cookie) ---- */
+const KEY = 'p2l_lead_v2';
+function stored() {
+  let v = null;
+  try { v = localStorage.getItem(KEY); } catch (e) {}
+  if (!v) { const m = document.cookie.match(/(?:^|; )p2l_lead_v2=([^;]*)/); if (m) v = m[1]; }
+  return v;
+}
+function already() { const t = parseInt(stored(), 10); return !!t && (Date.now() - t) < CONFIG.dedupHours * 36e5; }
+function mark() {
+  const v = String(Date.now());
+  try { localStorage.setItem(KEY, v); } catch (e) {}
+  try { document.cookie = KEY + '=' + v + '; max-age=' + (CONFIG.dedupHours * 3600) + '; path=/; SameSite=Lax'; } catch (e) {}
+}
 
-  const elapsed = Date.now() - openedAt;
-  const genuine = event.isTrusted && elapsed >= CONFIG.minimumClickTimeMs && !automated();
+/* ---- engagement tracking ---- */
+const t0 = Date.now();
+let visMs = 0, visSince = document.visibilityState === 'visible' ? Date.now() : 0;
+const visibleMs = () => visMs + (visSince ? Date.now() - visSince : 0);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') visSince = Date.now();
+  else if (visSince) { visMs += Date.now() - visSince; visSince = 0; }
+});
 
-  if (genuine && !leadSent && typeof window.fbq === 'function') {
-    fbq('track', 'Lead', {
-      content_name: 'Learning Machine - Way 2 Labh',
-      content_category: selected.length ? selected.join(', ') : 'Not selected',
-      destination: 'Telegram',
-      value: 0,
-      currency: 'INR',
-      time_on_page: Math.round(elapsed / 1000)
-    }, { eventID: eventId() });
-    leadSent = true;
+let moved = 0, firstMoveAt = 0, lastX = null, lastY = null, lastScroll = window.pageYOffset || 0, touchedElsewhere = false;
+function addMove(px) {
+  if (px <= 0) return;
+  moved += px;
+  if (!firstMoveAt && moved >= CONFIG.minMovePx) firstMoveAt = Date.now();
+}
+window.addEventListener('scroll', () => { const y = window.pageYOffset || 0; addMove(Math.abs(y - lastScroll)); lastScroll = y; }, { passive: true });
+function track(e) {
+  const p = (e.touches && e.touches[0]) || e;
+  if (p.clientX == null) return;
+  if (lastX !== null) addMove(Math.abs(p.clientX - lastX) + Math.abs(p.clientY - lastY));
+  lastX = p.clientX; lastY = p.clientY;
+}
+window.addEventListener('pointermove', track, { passive: true });
+window.addEventListener('touchmove', track, { passive: true });
+window.addEventListener('touchend', () => { lastX = null; lastY = null; }, { passive: true });
+window.addEventListener('touchstart', e => {
+  if (!(e.target && e.target.closest && e.target.closest('.join-link'))) touchedElsewhere = true;
+}, { passive: true });
+
+function filterReason(e) {
+  if (e.isTrusted === false) return 'untrusted';
+  if (isBot) return 'bot';
+  const now = Date.now();
+  if (now - t0 < CONFIG.ignoreClickMs) return 'too_fast';
+  if (visibleMs() < CONFIG.minDwellMs) return 'short_dwell';
+  if (!(moved >= CONFIG.minMovePx || touchedElsewhere)) return 'no_movement';
+  if (moved >= CONFIG.minMovePx && firstMoveAt && now - firstMoveAt < CONFIG.minEngagedMs && !touchedElsewhere) return 'short_engage';
+  if (already()) return 'duplicate';
+  return '';
+}
+
+/* ---- Telegram: real <a href>, NO preventDefault, NO setTimeout -> always opens instantly.
+        This handler only decides whether the pixel event fires. ---- */
+function onJoin(e) {
+  clickedAt = Date.now();
+  if (typeof window.fbq !== 'function') return;
+  const reason = filterReason(e);
+  const elapsed = Date.now() - t0;
+  if (!reason && !sent) {
+    try {
+      fbq('track', CONFIG.event, {
+        content_name: 'Learning Machine - Way 2 Labh',
+        content_category: selected.length ? selected.join(', ') : 'Not selected',
+        destination: 'Telegram',
+        value: 0,
+        currency: 'INR',
+        time_on_page: Math.round(elapsed / 1000)
+      }, { eventID: eventId() });
+      sent = true; mark();
+    } catch (err) {}
+  } else if (reason && CONFIG.reportFiltered && !reported) {
+    reported = true;
+    try { fbq('trackCustom', 'FilteredClick', { reason: reason, dwell_ms: Math.round(visibleMs()), moved_px: Math.round(moved) }); } catch (err) {}
   }
+}
 
-  setTimeout(() => { window.location.assign(CONFIG.telegramUrl); },
-    genuine ? CONFIG.trackedRedirectDelayMs : CONFIG.fastRedirectDelayMs);
+let href = CONFIG.telegramUrl;
+if (inApp && isAndroid) {
+  href = 'intent://join?invite=' + CONFIG.telegramInvite + '#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=' + encodeURIComponent(CONFIG.telegramUrl) + ';end';
 }
 
 function init() {
   document.querySelectorAll('.join-link').forEach(a => {
-    a.href = CONFIG.telegramUrl;
+    a.href = href;
     a.addEventListener('click', onJoin);
   });
+  if (inApp && isIOS) {
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;background:#ff9f1c;color:#1b1000;font:700 13px/1.4 Manrope,Arial,sans-serif;padding:8px 12px;text-align:center';
+    bar.textContent = 'Telegram न खुले तो ⋯ दबाकर "Open in Browser" चुनें · If Telegram does not open, tap ⋯ → Open in Browser';
+    document.body.appendChild(bar);
+  }
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
 else init();
+
+/* ---- recovery: user came back from Telegram -> maybe forgot "Request to Join" (no new Lead) ---- */
+let back = null;
+function showBack() {
+  if (back || !clickedAt) return;
+  back = document.createElement('div'); back.className = 'back';
+  back.innerHTML = 'क्या आपने Telegram में <b>"Request to Join"</b> दबाया?<small>Did you tap "Request to Join"? If not, open it again.</small><a href="' + href + '">फिर से Telegram खोलें · Open Telegram again</a>';
+  document.body.appendChild(back); back.style.display = 'block';
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && clickedAt && Date.now() - clickedAt > 1500) showBack();
+});
+window.addEventListener('pageshow', ev => { if (ev.persisted && clickedAt) showBack(); });
 })();
 </script>
 </body>
