@@ -160,7 +160,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
       <div class="pick hi" id="pick" aria-live="polite"></div>
     </div>
 
-    <a class="btn pulse join-link" href="https://t.me/+0n71bVhK84o0NjE1">
+    <a class="btn pulse join-link" href="https://t.me/+n9N-z9jPd_NmNDE1">
       <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
       <span class="hi">टेलीग्राम पर फ्री जुड़ें · Join Free</span>
     </a>
@@ -186,7 +186,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
   <div class="join">
     <h2 class="hi">आज ही सीखना शुरू करें</h2>
     <p class="hi">Start learning today · 100% फ्री</p>
-    <a class="btn join-link" href="https://t.me/+0n71bVhK84o0NjE1">
+    <a class="btn join-link" href="https://t.me/+n9N-z9jPd_NmNDE1">
       <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
       <span class="hi">टेलीग्राम चैनल खोलें · Open Telegram</span>
     </a>
@@ -198,7 +198,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
   </div>
 </div>
 
-<a class="float join-link" href="https://t.me/+0n71bVhK84o0NjE1" aria-label="Join Telegram">
+<a class="float join-link" href="https://t.me/+n9N-z9jPd_NmNDE1" aria-label="Join Telegram">
   <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
   <span>Telegram</span>
 </a>
@@ -209,8 +209,8 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
 
 const CONFIG = Object.freeze({
   pixelId: '947993417934616',
-  telegramUrl: 'https://t.me/+0n71bVhK84o0NjE1',
-  telegramInvite: '0n71bVhK84o0NjE1',
+  telegramUrl: 'https://t.me/+n9N-z9jPd_NmNDE1',
+  telegramInvite: 'n9N-z9jPd_NmNDE1',
   event: 'Lead',
   /* Filters apply ONLY to the pixel event. Telegram link is always present and always opens. */
   ignoreClickMs: 1000,   // tap in first 1s: Telegram still opens, no Lead
@@ -310,8 +310,26 @@ function filterReason(e) {
 
 /* ---- Telegram: real <a href>, NO preventDefault, NO setTimeout -> always opens instantly.
         This handler only decides whether the pixel event fires. ---- */
+/* ---- handoff watchdog: did Telegram really open? If the page is still visible after ~2s,
+        show a fallback panel. Also reports TgHandoff ok/stuck so you can see the real drop in Events Manager. ---- */
+let handedOff = false, watchTimer = null;
+const markOff = () => { handedOff = true; };
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') markOff(); });
+window.addEventListener('pagehide', markOff);
+window.addEventListener('blur', markOff);
+function startWatch() {
+  handedOff = false;
+  clearTimeout(watchTimer);
+  watchTimer = setTimeout(() => {
+    const stuck = !handedOff && document.visibilityState === 'visible';
+    try { fbq('trackCustom', 'TgHandoff', { result: stuck ? 'stuck' : 'ok', in_app: inApp ? 1 : 0, os: isAndroid ? 'android' : (isIOS ? 'ios' : 'other') }); } catch (err) {}
+    if (stuck) showFallback();
+  }, 2200);
+}
+
 function onJoin(e) {
   clickedAt = Date.now();
+  startWatch();
   if (typeof window.fbq !== 'function') return;
   const reason = filterReason(e);
   const elapsed = Date.now() - t0;
@@ -355,11 +373,23 @@ else init();
 
 /* ---- recovery: user came back from Telegram -> maybe forgot "Request to Join" (no new Lead) ---- */
 let back = null;
+function sheet(html) {
+  if (!back) { back = document.createElement('div'); back.className = 'back'; document.body.appendChild(back); }
+  back.innerHTML = html; back.style.display = 'block';
+}
 function showBack() {
   if (back || !clickedAt) return;
-  back = document.createElement('div'); back.className = 'back';
-  back.innerHTML = 'क्या आपने Telegram में <b>"Request to Join"</b> दबाया?<small>Did you tap "Request to Join"? If not, open it again.</small><a href="' + href + '">फिर से Telegram खोलें · Open Telegram again</a>';
-  document.body.appendChild(back); back.style.display = 'block';
+  sheet('क्या आपने Telegram में <b>"Request to Join"</b> दबाया?<small>Did you tap "Request to Join"? If not, open it again.</small><a href="' + href + '">फिर से Telegram खोलें · Open Telegram again</a>');
+}
+function showFallback() {
+  sheet('Telegram अपने आप नहीं खुला?<small>Telegram did not open automatically.</small><a href="' + CONFIG.telegramUrl + '">1) Telegram खोलें · Open Telegram</a><a href="#" id="cpyLink" style="background:#132a4a">2) लिंक कॉपी करें · Copy link</a><small>कॉपी करके Telegram या Chrome में खोलें · Paste in Telegram or Chrome</small>');
+  const c = document.getElementById('cpyLink');
+  if (c) c.addEventListener('click', ev => {
+    ev.preventDefault();
+    const done = () => { c.textContent = 'कॉपी हो गया ✓ · Copied'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(CONFIG.telegramUrl).then(done, done); }
+    else { try { const t = document.createElement('textarea'); t.value = CONFIG.telegramUrl; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); } catch (x) {} done(); }
+  });
 }
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && clickedAt && Date.now() - clickedAt > 1500) showBack();
