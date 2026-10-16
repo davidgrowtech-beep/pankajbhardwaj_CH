@@ -108,6 +108,49 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
 .back{position:fixed;left:12px;right:12px;bottom:80px;z-index:70;max-width:496px;margin:0 auto;background:var(--orange);color:#1b1000;border-radius:14px;padding:12px 14px;font-weight:800;font-size:13.5px;line-height:1.4;box-shadow:0 8px 28px rgba(0,0,0,.5);display:none}
 .back a{display:block;margin-top:8px;background:#071426;color:#fff;text-align:center;padding:10px;border-radius:10px;font-weight:800}
 .back small{display:block;font-weight:600;opacity:.85}
+
+/* ===== Highlighted blinking Telegram buttons ===== */
+.btn{position:relative;isolation:isolate;color:#fff;background:linear-gradient(135deg,#1fa2e6 0%,#2481cc 45%,#0f6fb8 100%);border:2px solid #bfe9ff;text-align:left;gap:12px;
+  animation:btnBlink 1.1s ease-in-out infinite,btnRing 1.8s ease-out infinite!important}
+.btn::before{content:"";position:absolute;inset:-5px;border-radius:19px;z-index:-1;padding:3px;
+  background:conic-gradient(from 0deg,#ff9f1c,#ff4d6d,#2ecc8f,#4cc9f0,#ff9f1c);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinBorder 2.4s linear infinite}
+.btn .shine{position:absolute;inset:0;border-radius:13px;overflow:hidden;pointer-events:none}
+.btn .shine::after{content:"";position:absolute;top:0;bottom:0;width:46%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);animation:shineSweep 2.2s ease-in-out infinite}
+.tgIcon{width:42px;height:42px;min-width:42px;border-radius:50%;background:#fff;color:#229ed9;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.25);animation:planeFloat 1.4s ease-in-out infinite}
+.tgIcon svg,.btn .tgIcon svg{width:24px;height:24px;margin-left:-2px;fill:#229ed9}
+.btn .lbl{flex:1;line-height:1.25}
+.btn .lbl b{display:block;font-size:16px;font-weight:800;color:#fff}
+.btn .lbl small{display:block;font-size:11.5px;font-weight:600;color:#e4f6ff;margin-top:3px}
+.btn .arr{font-size:22px;font-weight:800;color:#ffe27a;animation:arrNudge .9s ease-in-out infinite}
+.btn .tag{position:absolute;top:-10px;right:14px;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.8px;padding:3px 9px;border-radius:20px;background:#e5484d;color:#fff;border:1.5px solid #fff;animation:tagBlink .7s steps(2,jump-none) infinite}
+.btn.busy,.float.busy{pointer-events:none;opacity:.8}
+.float{background:linear-gradient(135deg,#1fa2e6,#0f6fb8);border:2px solid #bfe9ff;padding:0 18px 0 8px;gap:9px;animation:btnBlink 1.1s ease-in-out infinite,btnRing 1.8s ease-out infinite}
+.float .tgIcon{width:36px;height:36px;min-width:36px}
+.float .tgIcon svg{width:20px;height:20px}
+@keyframes btnBlink{0%,100%{filter:brightness(1);transform:scale(1)}50%{filter:brightness(1.3) saturate(1.2);transform:scale(1.03)}}
+@keyframes btnRing{0%{box-shadow:0 0 0 0 rgba(34,158,217,.75),0 12px 28px -8px rgba(34,158,217,.7)}100%{box-shadow:0 0 0 16px rgba(34,158,217,0),0 12px 28px -8px rgba(34,158,217,.7)}}
+@keyframes spinBorder{to{transform:rotate(360deg)}}
+@keyframes shineSweep{0%{left:-60%}60%,100%{left:130%}}
+@keyframes planeFloat{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(3px,-4px) rotate(-8deg)}}
+@keyframes arrNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes tagBlink{0%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.btn,.float,.btn::before,.shine::after,.tgIcon,.arr,.tag{animation:none!important}}
+
+/* ===== Name + age gate ===== */
+.gate{position:relative;margin-top:20px;text-align:left;background:var(--panel);border:1.5px solid var(--orange);border-radius:16px;padding:16px;scroll-margin-top:16px}
+.gate h2{font-size:14.5px;font-weight:800;color:var(--orange-soft);line-height:1.5}
+.gate h2 small{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
+.gate label{display:block;font-size:12.5px;color:var(--muted);margin:11px 0 5px}
+.gate input[type=text],.gate input[type=tel]{width:100%;background:#071426;border:1.5px solid #2c4468;color:#fff;border-radius:12px;padding:13px 14px;font-size:16px;font-family:inherit;outline:none;transition:border .2s}
+.gate input:focus{border-color:var(--orange)}
+.gate input.ok{border-color:var(--green)}
+.gate input.bad{border-color:#ff5b5b}
+.gate .hint{display:none;margin-top:10px;font-size:12.5px;color:#ff9a9a;text-align:center;line-height:1.6}
+.gate .hint.show{display:block}
+.gate.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.hero .btn{margin-top:14px}
 </style>
 </head>
 <body>
@@ -136,7 +179,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
 
     <div class="choose">
       <h2 class="hi">अपना विषय चुनें · Choose your topic</h2>
-      <p class="hi">आप किसमें सीखना चाहते हैं? (वैकल्पिक — टेलीग्राम हमेशा खुला है)</p>
+      <p class="hi">आप किसमें सीखना चाहते हैं? (वैकल्पिक · Optional)</p>
       <div class="opts" id="opts">
         <button type="button" class="opt" data-topic="Mutual Fund" data-hi="म्यूचुअल फंड" aria-pressed="false">
           <span class="chk">✓</span><span class="ic">📈</span><b>Mutual Fund</b><span class="s hi">म्यूचुअल फंड, SIP और लक्ष्य-आधारित निवेश</span>
@@ -160,10 +203,16 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
       <div class="pick hi" id="pick" aria-live="polite"></div>
     </div>
 
-    <a class="btn pulse join-link" href="https://t.me/+n9N-z9jPd_NmNDE1">
-      <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
-      <span class="hi">टेलीग्राम पर फ्री जुड़ें · Join Free</span>
-    </a>
+    <div class="gate" id="gate">
+      <h2 class="hi">टेलीग्राम जुड़ने के लिए अपनी जानकारी भरें<small>Enter your name &amp; age to unlock Telegram</small></h2>
+      <label class="hi" for="nm">आपका नाम · Your Name</label>
+      <input id="nm" type="text" autocomplete="name" maxlength="40" placeholder="नाम / Name">
+      <label class="hi" for="ag">आपकी उम्र · Your Age</label>
+      <input id="ag" type="tel" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="उम्र / Age (18+)">
+      <input id="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <p id="hint" class="hint hi">⚠️ पहले नाम और उम्र (18+) भरें · Please enter your name &amp; age (18+) first</p>
+    </div>
+    <a class="btn pulse join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम पर फ्री जुड़ें</b><small class="hi">Join Free · Telegram में “Request to Join” दबाएँ</small></span><span class="arr">➜</span></a>
     <span class="free hi">कोई फीस नहीं · No fees · बिगिनर्स के लिए</span>
   </section>
 
@@ -186,10 +235,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
   <div class="join">
     <h2 class="hi">आज ही सीखना शुरू करें</h2>
     <p class="hi">Start learning today · 100% फ्री</p>
-    <a class="btn join-link" href="https://t.me/+n9N-z9jPd_NmNDE1">
-      <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
-      <span class="hi">टेलीग्राम चैनल खोलें · Open Telegram</span>
-    </a>
+    <a class="btn pulse join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम चैनल खोलें</b><small class="hi">Open Telegram · 100% Free</small></span><span class="arr">➜</span></a>
   </div>
 
   <div class="disc">
@@ -198,19 +244,16 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
   </div>
 </div>
 
-<a class="float join-link" href="https://t.me/+n9N-z9jPd_NmNDE1" aria-label="Join Telegram">
-  <svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg>
-  <span>Telegram</span>
-</a>
+<a class="float join-link" href="#" rel="noopener" aria-label="Join Telegram"><span class="tgIcon"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg></span><span>Join Telegram</span></a>
 
 <script>
 (() => {
 'use strict';
 
 const CONFIG = Object.freeze({
-  pixelId: '947993417934616',
-  telegramUrl: 'https://t.me/+n9N-z9jPd_NmNDE1',
-  telegramInvite: 'n9N-z9jPd_NmNDE1',
+  pixelId: '2038753140107260',
+  telegramUrl: ['https://t.me/+','n9N-z9jPd_','NmNDE1'].join(''),
+  telegramInvite: ['n9N-z9jPd_','NmNDE1'].join(''),
   event: 'Lead',
   /* Filters apply ONLY to the pixel event. Telegram link is always present and always opens. */
   ignoreClickMs: 1000,   // tap in first 1s: Telegram still opens, no Lead
@@ -233,7 +276,7 @@ let sent = false, reported = false, clickedAt = 0;
 /* Meta Pixel */
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=true;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=true;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', CONFIG.pixelId);
-fbq('track', 'PageView');
+/* PageView is fired later, only for visitors who look like real people (see qualified PageView below) */
 
 function eventId() {
   return 'lead_' + (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random().toString(36).slice(2, 10));
@@ -308,6 +351,42 @@ function filterReason(e) {
   return '';
 }
 
+/* ---- Gate: valid name + age (typed by a real person) unlocks the Telegram link.
+        The invite link is NOT in the HTML source; it is only assigned to the buttons after unlock,
+        so scrapers / bots that read the page cannot harvest it and join in bulk. ---- */
+const $ = id => document.getElementById(id);
+const nm = $('nm'), ag = $('ag'), hp = $('hp'), hint = $('hint'), gateBox = $('gate');
+let typed = false;
+const nameOk = () => { const v = nm.value.trim(); return v.length >= 2 && /[A-Za-z\u0900-\u097F]{2,}/.test(v) && !/(.)\1{3,}/.test(v) && !/^\d+$/.test(v); };
+const ageOk  = () => { const v = ag.value.trim(), a = parseInt(v, 10); return /^\d{2}$/.test(v) && a >= 18 && a <= 70; };
+const gateOk = () => nameOk() && ageOk() && typed && !hp.value && !isBot;
+function renderGate() {
+  nm.classList.toggle('ok', nameOk()); nm.classList.toggle('bad', nm.value.length > 0 && !nameOk());
+  ag.classList.toggle('ok', ageOk());  ag.classList.toggle('bad', ag.value.length > 0 && !ageOk());
+  const ok = gateOk();
+  document.querySelectorAll('.join-link').forEach(a => a.setAttribute('href', ok ? href : '#'));
+  if (ok) hint.classList.remove('show');
+}
+function gateHint() {
+  hint.classList.add('show');
+  gateBox.classList.remove('shake'); void gateBox.offsetWidth; gateBox.classList.add('shake');
+  gateBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  (nameOk() ? ag : nm).focus({ preventScroll: true });
+}
+[nm, ag].forEach(el => el.addEventListener('input', e => { if (e.isTrusted) typed = true; if (el === ag) ag.value = ag.value.replace(/\D/g, '').slice(0, 2); renderGate(); }));
+
+/* ---- Qualified PageView: only after a real interaction + 3s, or 8s visible (keeps bot / bounce traffic out of Meta's learning) ---- */
+let pvFired = false, humanSeen = false;
+['touchstart', 'pointerdown', 'keydown', 'scroll', 'mousemove'].forEach(n => window.addEventListener(n, e => { if (e.isTrusted) humanSeen = true; }, { passive: true }));
+setInterval(() => {
+  if (pvFired || isBot || typeof window.fbq !== 'function') return;
+  const t = Date.now() - t0;
+  if (document.visibilityState === 'visible' && ((humanSeen && t >= 3000) || visibleMs() >= 8000)) {
+    pvFired = true;
+    try { fbq('track', 'PageView'); } catch (e) {}
+  }
+}, 500);
+
 /* ---- Telegram: real <a href>, NO preventDefault, NO setTimeout -> always opens instantly.
         This handler only decides whether the pixel event fires. ---- */
 /* ---- handoff watchdog: did Telegram really open? If the page is still visible after ~2s,
@@ -328,6 +407,9 @@ function startWatch() {
 }
 
 function onJoin(e) {
+  if (e.isTrusted === false || isBot) { e.preventDefault(); return; }
+  if (!gateOk()) { e.preventDefault(); gateHint(); return; }
+  const self = e.currentTarget; self.classList.add('busy'); setTimeout(() => self.classList.remove('busy'), 3500);
   clickedAt = Date.now();
   startWatch();
   if (typeof window.fbq !== 'function') return;
@@ -358,9 +440,10 @@ if (inApp && isAndroid) {
 
 function init() {
   document.querySelectorAll('.join-link').forEach(a => {
-    a.href = href;
+    a.href = '#';
     a.addEventListener('click', onJoin);
   });
+  renderGate();
   if (inApp && isIOS) {
     const bar = document.createElement('div');
     bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;background:#ff9f1c;color:#1b1000;font:700 13px/1.4 Manrope,Arial,sans-serif;padding:8px 12px;text-align:center';
