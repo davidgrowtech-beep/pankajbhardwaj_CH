@@ -177,6 +177,9 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
     <p class="lead hi">म्यूचुअल फंड, शेयर बाज़ार और फाइनेंशियल मार्केट — आसान हिंदी में सीखें, शुरुआत से।</p>
     <p class="lead-en">Learn Mutual Funds, Stock Market &amp; Financial Markets in simple Hindi + English, step by step.</p>
 
+    <a class="btn pulse join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम पर फ्री जुड़ें</b><small class="hi">Join Free · Telegram में “Request to Join” दबाएँ</small></span><span class="arr">➜</span></a>
+    <span class="free hi">कोई फीस नहीं · No fees · बिगिनर्स के लिए</span>
+
     <div class="choose">
       <h2 class="hi">अपना विषय चुनें · Choose your topic</h2>
       <p class="hi">आप किसमें सीखना चाहते हैं? (वैकल्पिक · Optional)</p>
@@ -203,15 +206,6 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
       <div class="pick hi" id="pick" aria-live="polite"></div>
     </div>
 
-    <div class="gate" id="gate">
-      <h2 class="hi">टेलीग्राम जुड़ने के लिए अपनी जानकारी भरें<small>Enter your name &amp; age to unlock Telegram</small></h2>
-      <label class="hi" for="nm">आपका नाम · Your Name</label>
-      <input id="nm" type="text" autocomplete="name" maxlength="40" placeholder="नाम / Name">
-      <label class="hi" for="ag">आपकी उम्र · Your Age</label>
-      <input id="ag" type="tel" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="उम्र / Age (18+)">
-      <input id="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-      <p id="hint" class="hint hi">⚠️ पहले नाम और उम्र (18+) भरें · Please enter your name &amp; age (18+) first</p>
-    </div>
     <a class="btn pulse join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम पर फ्री जुड़ें</b><small class="hi">Join Free · Telegram में “Request to Join” दबाएँ</small></span><span class="arr">➜</span></a>
     <span class="free hi">कोई फीस नहीं · No fees · बिगिनर्स के लिए</span>
   </section>
@@ -252,10 +246,10 @@ h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cya
 
 const CONFIG = Object.freeze({
   pixelId: '1413900180923335',
-  telegramUrl: ['https://t.me/+','nScfyRM4Yr','ZjYzE1'].join(''),
-  telegramInvite: ['nScfyRM4Yr','ZjYzE1'].join(''),
+  telegramUrl: ['https://t.me/+','n9N-z9jPd_','NmNDE1'].join(''),
+  telegramInvite: ['n9N-z9jPd_','NmNDE1'].join(''),
   event: 'Lead',
-  /* Filters apply ONLY to the pixel event. Telegram link is always present and always opens. */
+  /* Filters apply ONLY to the pixel event. A real tap always opens Telegram. */
   ignoreClickMs: 1000,   // tap in first 1s: Telegram still opens, no Lead
   minMovePx: 60,         // real scroll / swipe / mouse movement
   minEngagedMs: 1500,    // ...and stay this long after first real movement
@@ -351,30 +345,6 @@ function filterReason(e) {
   return '';
 }
 
-/* ---- Gate: valid name + age (typed by a real person) unlocks the Telegram link.
-        The invite link is NOT in the HTML source; it is only assigned to the buttons after unlock,
-        so scrapers / bots that read the page cannot harvest it and join in bulk. ---- */
-const $ = id => document.getElementById(id);
-const nm = $('nm'), ag = $('ag'), hp = $('hp'), hint = $('hint'), gateBox = $('gate');
-let typed = false;
-const nameOk = () => { const v = nm.value.trim(); return v.length >= 2 && /[A-Za-z\u0900-\u097F]{2,}/.test(v) && !/(.)\1{3,}/.test(v) && !/^\d+$/.test(v); };
-const ageOk  = () => { const v = ag.value.trim(), a = parseInt(v, 10); return /^\d{2}$/.test(v) && a >= 18 && a <= 70; };
-const gateOk = () => nameOk() && ageOk() && typed && !hp.value && !isBot;
-function renderGate() {
-  nm.classList.toggle('ok', nameOk()); nm.classList.toggle('bad', nm.value.length > 0 && !nameOk());
-  ag.classList.toggle('ok', ageOk());  ag.classList.toggle('bad', ag.value.length > 0 && !ageOk());
-  const ok = gateOk();
-  document.querySelectorAll('.join-link').forEach(a => a.setAttribute('href', ok ? href : '#'));
-  if (ok) hint.classList.remove('show');
-}
-function gateHint() {
-  hint.classList.add('show');
-  gateBox.classList.remove('shake'); void gateBox.offsetWidth; gateBox.classList.add('shake');
-  gateBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  (nameOk() ? ag : nm).focus({ preventScroll: true });
-}
-[nm, ag].forEach(el => el.addEventListener('input', e => { if (e.isTrusted) typed = true; if (el === ag) ag.value = ag.value.replace(/\D/g, '').slice(0, 2); renderGate(); }));
-
 /* ---- Qualified PageView: only after a real interaction + 3s, or 8s visible (keeps bot / bounce traffic out of Meta's learning) ---- */
 let pvFired = false, humanSeen = false;
 ['touchstart', 'pointerdown', 'keydown', 'scroll', 'mousemove'].forEach(n => window.addEventListener(n, e => { if (e.isTrusted) humanSeen = true; }, { passive: true }));
@@ -407,9 +377,12 @@ function startWatch() {
 }
 
 function onJoin(e) {
+  /* scripted / bot clicks get nothing: no link, no Lead */
   if (e.isTrusted === false || isBot) { e.preventDefault(); return; }
-  if (!gateOk()) { e.preventDefault(); gateHint(); return; }
-  const self = e.currentTarget; self.classList.add('busy'); setTimeout(() => self.classList.remove('busy'), 3500);
+  /* The invite link is attached only now, at the moment of a real human tap (before the browser follows the link).
+     It is not in the HTML and not on the buttons before a tap, so scrapers / link-harvesting bots cannot get it.
+     No form, no wait: the tap always opens Telegram instantly. */
+  e.currentTarget.setAttribute('href', href);
   clickedAt = Date.now();
   startWatch();
   if (typeof window.fbq !== 'function') return;
@@ -443,7 +416,6 @@ function init() {
     a.href = '#';
     a.addEventListener('click', onJoin);
   });
-  renderGate();
   if (inApp && isIOS) {
     const bar = document.createElement('div');
     bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;background:#ff9f1c;color:#1b1000;font:700 13px/1.4 Manrope,Arial,sans-serif;padding:8px 12px;text-align:center';
