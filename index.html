@@ -1,395 +1,122 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071426">
-<title>Learning Machine - Way 2 Labh (Pankaj Bhardwaj)</title>
-<meta name="description" content="Mutual Fund, Stock Market aur Financial Market seekhein simple Hindi-English mein. Free Telegram learning community.">
-<meta property="og:title" content="Learning Machine - Way 2 Labh (Pankaj Bhardwaj)">
-<meta property="og:description" content="Mutual Fund, Stock Market, Financial Market सीखें — फ्री टेलीग्राम कम्युनिटी">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Pankaj's Trading Skill Learning Hub (Way 2 Labh)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#071426;--panel:#0e2038;--panel2:#132a4a;--line:rgba(94,196,255,.2);--cyan:#4cc9f0;--orange:#ff9f1c;--orange-soft:#ffc46b;--green:#2ecc8f;--cream:#f4f8ff;--muted:#9fb3cc;--tg:#229ed9}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{background:radial-gradient(circle at 85% 0%,rgba(76,201,240,.12),transparent 45%),radial-gradient(circle at 0% 30%,rgba(255,159,28,.07),transparent 40%),var(--bg);color:var(--cream);font-family:Manrope,"Noto Sans Devanagari",sans-serif;overflow-x:hidden;min-height:100vh}
-a{color:inherit;text-decoration:none}
-.hi{font-family:"Noto Sans Devanagari",Manrope,sans-serif}
-.wrap{width:min(520px,100%);margin:0 auto;padding:0 18px 110px}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0}
-.brand{min-width:0}
-.brand strong{display:block;font-size:16px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
-.brand strong em{font-style:normal;color:var(--orange)}
-.brand small{display:block;color:var(--cyan);font-size:10.5px;font-weight:700;margin-top:3px;letter-spacing:.02em}
-.me{flex-shrink:0;display:flex;align-items:center;gap:9px;text-align:right}
-.me span{display:block;font-size:11px;font-weight:800;line-height:1.2}
-.me small{display:block;color:var(--muted);font-size:9.5px;font-weight:600;margin-top:1px}
-.me img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2.5px solid var(--orange);box-shadow:0 0 0 3px rgba(255,159,28,.18),0 6px 20px rgba(0,0,0,.4)}
-.hero{padding:14px 0 6px;text-align:center}
-.badge{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:11px;font-weight:800;border:1px solid rgba(46,204,143,.35);border-radius:999px;padding:6px 13px;margin-bottom:16px;background:rgba(46,204,143,.07)}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.3s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-h1{font-size:clamp(27px,8vw,36px);line-height:1.18;letter-spacing:-.02em;font-weight:800;margin-bottom:10px}
-h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:14.5px;color:var(--cream);line-height:1.75;max-width:40ch;margin:0 auto 4px}
-.lead-en{font-size:13px;color:var(--muted);line-height:1.6;max-width:42ch;margin:0 auto}
-.choose{margin-top:24px;text-align:left}
-.choose h2{font-size:15px;font-weight:800;margin-bottom:3px}
-.choose p{font-size:12px;color:var(--muted);margin-bottom:12px}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{position:relative;display:flex;flex-direction:column;gap:5px;text-align:left;font:inherit;color:inherit;cursor:pointer;background:linear-gradient(145deg,var(--panel2),var(--panel));border:1.5px solid var(--line);border-radius:15px;padding:13px 12px 12px;transition:transform .15s,border-color .2s,box-shadow .2s}
-.opt:active{transform:scale(.97)}
-.opt .ic{font-size:22px;line-height:1}
-.opt b{font-size:13.5px;font-weight:800}
-.opt span.s{font-size:11px;color:var(--muted);line-height:1.4}
-.opt .chk{position:absolute;top:9px;right:9px;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;color:transparent;transition:.2s}
-.opt[aria-pressed="true"]{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,159,28,.15),0 10px 24px rgba(0,0,0,.3);background:linear-gradient(145deg,#1b3357,var(--panel2))}
-.opt[aria-pressed="true"] .chk{background:var(--orange);border-color:var(--orange);color:#1b1000;font-weight:900}
-.pick{display:flex;align-items:center;justify-content:center;gap:6px;min-height:20px;margin:12px 0 2px;font-size:12px;color:var(--orange-soft);font-weight:700;text-align:center}
-.free{display:block;text-align:center;color:var(--muted);font-size:11.5px;margin-top:9px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:22px}
-.stat{text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px 6px}
-.stat b{display:block;font-size:15px;color:var(--cyan);margin-bottom:2px}
-.stat span{font-size:10.5px;color:var(--muted);line-height:1.35;display:block}
-.info{margin-top:20px;padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
-.info h3{font-size:14px;color:var(--cyan);margin-bottom:9px}
-.info ul{list-style:none}
-.info li{display:flex;gap:9px;color:var(--muted);font-size:12.5px;line-height:1.6;padding:5px 0}
-.info li::before{content:"✓";color:var(--green);font-weight:900;flex-shrink:0}
-.join{margin-top:22px;padding:22px 18px;text-align:center;background:radial-gradient(circle at top,rgba(255,159,28,.14),transparent 62%),var(--panel);border:1px solid var(--line);border-radius:18px}
-.join h2{font-size:19px;margin-bottom:5px}
-.join p{color:var(--muted);font-size:12px;margin-bottom:16px}
-.disc{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);color:#6c819c;font-size:10.5px;line-height:1.7;text-align:center}
-@media(min-width:521px){.wrap{padding-top:10px}}
-@media(max-width:360px){.opts{gap:8px}.opt b{font-size:12.5px}.me img{width:50px;height:50px}.brand strong{font-size:14.5px}}
-.back{position:fixed;left:12px;right:12px;bottom:80px;z-index:70;max-width:496px;margin:0 auto;background:var(--orange);color:#1b1000;border-radius:14px;padding:12px 14px;font-weight:800;font-size:13.5px;line-height:1.4;box-shadow:0 8px 28px rgba(0,0,0,.5);display:none}
-.back a{display:block;margin-top:8px;background:#071426;color:#fff;text-align:center;padding:10px;border-radius:10px;font-weight:800}
-.back small{display:block;font-weight:600;opacity:.85}
-/* ===== Blinking Telegram buttons ===== */
-.btn{position:relative;isolation:isolate;display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:14px 20px;color:#fff;background:linear-gradient(135deg,#1fa2e6 0%,#2481cc 45%,#0f6fb8 100%);border:2px solid #bfe9ff;border-radius:15px;text-align:left;cursor:pointer;animation:btnBlink 1.1s ease-in-out infinite,btnRing 1.8s ease-out infinite}
-.btn:active{transform:scale(.98)}
-.btn::before{content:"";position:absolute;inset:-5px;border-radius:19px;z-index:-1;padding:3px;background:linear-gradient(90deg,#ff9f1c,#ff4d6d,#2ecc8f,#4cc9f0,#ff9f1c,#ff9f1c);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;background-size:300% 100%;animation:borderFlow 2.4s linear infinite}
-.btn .shine{position:absolute;inset:0;border-radius:13px;overflow:hidden;pointer-events:none}
-.btn .shine::after{content:"";position:absolute;top:0;bottom:0;width:46%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);animation:shineSweep 2.2s ease-in-out infinite}
-.tgIcon{width:42px;height:42px;min-width:42px;border-radius:50%;background:#fff;color:#229ed9;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.25);animation:planeFloat 1.4s ease-in-out infinite}
-.tgIcon svg{width:24px;height:24px;margin-left:-2px;fill:#229ed9}
-.btn .lbl{flex:1;line-height:1.25}
-.btn .lbl b{display:block;font-size:16px;font-weight:800;color:#fff}
-.btn .lbl small{display:block;font-size:11.5px;font-weight:600;color:#e4f6ff;margin-top:3px}
-.btn .arr{font-size:22px;font-weight:800;color:#ffe27a;animation:arrNudge .9s ease-in-out infinite}
-.btn .tag{position:absolute;top:-10px;right:14px;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.8px;padding:3px 9px;border-radius:20px;background:#e5484d;color:#fff;border:1.5px solid #fff;animation:tagBlink .7s steps(2,jump-none) infinite}
-.hero .btn{margin-top:14px}
-.float{position:fixed;right:14px;bottom:14px;display:flex;align-items:center;gap:9px;height:52px;padding:0 18px 0 8px;border-radius:999px;background:linear-gradient(135deg,#1fa2e6,#0f6fb8);border:2px solid #bfe9ff;color:#fff;font-weight:800;font-size:13.5px;z-index:20;animation:btnBlink 1.1s ease-in-out infinite,btnRing 1.8s ease-out infinite}
-.float .tgIcon{width:36px;height:36px;min-width:36px}
-.float .tgIcon svg{width:20px;height:20px}
-@keyframes btnBlink{0%,100%{filter:brightness(1);transform:scale(1)}50%{filter:brightness(1.3) saturate(1.2);transform:scale(1.03)}}
-@keyframes btnRing{0%{box-shadow:0 0 0 0 rgba(34,158,217,.75),0 12px 28px -8px rgba(34,158,217,.7)}100%{box-shadow:0 0 0 16px rgba(34,158,217,0),0 12px 28px -8px rgba(34,158,217,.7)}}
-@keyframes borderFlow{to{background-position:300% 0}}
-@keyframes shineSweep{0%{left:-60%}60%,100%{left:130%}}
-@keyframes planeFloat{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(3px,-4px) rotate(-8deg)}}
-@keyframes arrNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
-@keyframes tagBlink{0%{opacity:1}50%{opacity:.25}}
-@media (prefers-reduced-motion:reduce){.btn,.float,.btn::before,.shine::after,.tgIcon,.arr,.tag{animation:none!important}}
-.choose.shake{animation:shake .45s}
-.choose.need .opts{outline:2px dashed var(--orange);outline-offset:6px;border-radius:15px}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+:root{--bg:#0F2B21;--bg2:#163A2D;--ink:#EEF4EF;--mut:#A9C0B3;--gold:#F2A23A;--tg1:#2AABEE;--tg2:#1479AE}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{background:radial-gradient(120% 70% at 50% 0,var(--bg2),var(--bg) 70%);color:var(--ink);font-family:"Hind","Noto Sans Devanagari","Segoe UI",system-ui,sans-serif;line-height:1.55;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+main{max-width:460px;margin:0 auto;padding:28px 20px 24px;text-align:center}
+.logo{width:116px;height:116px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 0 0 6px rgba(242,162,58,.18);background:#222}
+h1{font-size:1.5rem;font-weight:700;line-height:1.25;margin-top:16px}
+.brand{color:var(--gold);font-weight:600;font-size:1.05rem;margin-top:2px}
+.hl{margin-top:22px;font-size:1.45rem;font-weight:700;line-height:1.3}
+.hl span{display:block;font-size:1rem;font-weight:500;color:var(--mut);margin-top:2px}
+.cta{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:26px;padding:18px 16px;border:0;border-radius:16px;cursor:pointer;color:#fff;font:inherit;font-weight:700;font-size:1.3rem;line-height:1.2;background:linear-gradient(180deg,var(--tg1),var(--tg2));box-shadow:0 10px 28px rgba(42,171,238,.45),inset 0 1px 0 rgba(255,255,255,.35);animation:pulse 2.2s ease-out infinite}
+.cta small{display:block;font-size:.9rem;font-weight:500;opacity:.92}
+.cta svg{flex:none;width:34px;height:34px}
+.cta:active{transform:scale(.98)}
+.cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.cta[disabled]{animation:none;opacity:.85;cursor:wait}
+@keyframes pulse{0%{box-shadow:0 10px 28px rgba(42,171,238,.45),0 0 0 0 rgba(42,171,238,.55)}70%{box-shadow:0 10px 28px rgba(42,171,238,.45),0 0 0 18px rgba(42,171,238,0)}100%{box-shadow:0 10px 28px rgba(42,171,238,.45),0 0 0 0 rgba(42,171,238,0)}}
+ul{list-style:none;padding:0;margin:28px 0 0;text-align:left;display:grid;gap:12px}
+li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:rgba(255,255,255,.06);border-radius:12px}
+li svg{flex:none;width:22px;height:22px;margin-top:3px;color:var(--gold)}
+li b{display:block;font-weight:600}
+li span{display:block;font-size:.92rem;color:var(--mut)}
+.note{margin-top:24px;font-size:.8rem;color:var(--mut);line-height:1.5}
+.by{display:inline-block;margin-top:16px;padding:7px 16px;border:1px solid rgba(238,244,239,.28);border-radius:999px;color:var(--mut);font-size:.8rem;text-decoration:none}
+.by b{color:var(--ink);font-weight:600}
+.by:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.cta{animation:none}}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="tg" viewBox="0 0 24 24"><path d="M21.8 3.2 18.5 20c-.25 1.18-.91 1.47-1.85.92l-5-3.68-2.41 2.32c-.27.27-.49.49-1 .49l.36-5.09 9.26-8.37c.4-.36-.09-.56-.63-.2L5.78 13.6.85 12.06c-1.07-.34-1.09-1.07.22-1.58L20.35 3c.9-.33 1.68.2 1.45.2Z"/></symbol></svg>
-<div class="wrap">
-  <header class="nav">
-    <div class="brand">
-      <strong>Learning Machine<br><em>Way 2 Labh</em></strong>
-      <small class="hi">पंकज भारद्वाज · Pankaj Bhardwaj</small>
-    </div>
-    <div class="me">
-      <div><span>Pankaj Bhardwaj</span><small class="hi">आपके मार्गदर्शक</small></div>
-      <img src="pkj.jpeg" alt="Pankaj Bhardwaj">
-    </div>
-  </header>
+<main>
+  <img class="logo" src="data:image/jpeg;base64,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" alt="Pankaj Bhardwaj" width="116" height="116">
+  <h1>Pankaj&rsquo;s Trading Skill Learning Hub</h1>
+  <p class="brand">(Way 2 Labh)</p>
 
-  <section class="hero" id="top">
-    <div class="badge"><span class="dot"></span><span class="hi">फ्री टेलीग्राम लर्निंग कम्युनिटी · Free Learning Community</span></div>
-    <h1 class="hi">पैसे की समझ से <em>Labh का रास्ता</em></h1>
-    <p class="lead hi">म्यूचुअल फंड, शेयर बाज़ार और फाइनेंशियल मार्केट — आसान हिंदी में सीखें, शुरुआत से।</p>
-    <p class="lead-en">Learn Mutual Funds, Stock Market &amp; Financial Markets in simple Hindi + English, step by step.</p>
+  <p class="hl">ट्रेडिंग सीखें, सही तरीके से<span>Learn trading the right way</span></p>
 
-    <a class="btn join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><use href="#tg"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम पर फ्री जुड़ें</b><small class="hi">Join Free · Telegram में “Request to Join” दबाएँ</small></span><span class="arr">➜</span></a>
-    <span class="free hi">कोई फीस नहीं · No fees · बिगिनर्स के लिए</span>
+  <button id="tg" class="cta" type="button" aria-label="टेलीग्राम पर जुड़ें / Join on Telegram">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 3 2.8 10.4l6.6 2.5L11.9 20l3.3-4.700 4.1 3.200z"/></svg>
+    <span>टेलीग्राम पर जुड़ें<small>Join on Telegram</small></span>
+  </button>
 
-    <div class="choose">
-      <h2 class="hi">अपना विषय चुनें · Choose your topic</h2>
-      <p class="hi">आप किसमें सीखना चाहते हैं? (वैकल्पिक · Optional)</p>
-      <div class="opts" id="opts">
-        <button type="button" class="opt" data-topic="Mutual Fund" data-hi="म्यूचुअल फंड" aria-pressed="false"><span class="chk">✓</span><span class="ic">📈</span><b>Mutual Fund</b><span class="s hi">म्यूचुअल फंड, SIP और लक्ष्य-आधारित निवेश</span></button>
-        <button type="button" class="opt" data-topic="Stock Market" data-hi="शेयर बाज़ार" aria-pressed="false"><span class="chk">✓</span><span class="ic">🏦</span><b>Stock Market</b><span class="s hi">शेयर बाज़ार की बेसिक्स और चार्ट</span></button>
-        <button type="button" class="opt" data-topic="Financial Market" data-hi="फाइनेंशियल मार्केट" aria-pressed="false"><span class="chk">✓</span><span class="ic">🌐</span><b>Financial Market</b><span class="s hi">बाज़ार कैसे चलता है — बॉन्ड, कमोडिटी, करेंसी</span></button>
-        <button type="button" class="opt" data-topic="Technical Analysis" data-hi="टेक्निकल एनालिसिस" aria-pressed="false"><span class="chk">✓</span><span class="ic">📊</span><b>Technical Analysis</b><span class="s hi">चार्ट, ट्रेंड, सपोर्ट-रेसिस्टेंस</span></button>
-        <button type="button" class="opt" data-topic="Risk Management" data-hi="रिस्क मैनेजमेंट" aria-pressed="false"><span class="chk">✓</span><span class="ic">🛡️</span><b>Risk Management</b><span class="s hi">Stop-Loss और पूंजी की सुरक्षा</span></button>
-        <button type="button" class="opt" data-topic="Wealth Planning" data-hi="वेल्थ प्लानिंग" aria-pressed="false"><span class="chk">✓</span><span class="ic">💰</span><b>Wealth Planning</b><span class="s hi">बजट, सेविंग और लंबी अवधि की योजना</span></button>
-      </div>
-      <div class="pick hi" id="pick" aria-live="polite"></div>
-    </div>
+  <ul>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>फ्री टेलीग्राम चैनल</b><span>Free Telegram channel</span></div></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>आसान भाषा में स्टेप-बाय-स्टेप सीख</b><span>Step-by-step learning in simple language</span></div></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><div><b>सिर्फ़ शिक्षा के लिए, मुनाफ़े की कोई गारंटी नहीं</b><span>For education only. No profit guarantee.</span></div></li>
+  </ul>
 
-    <a class="btn join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><use href="#tg"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम पर फ्री जुड़ें</b><small class="hi">Join Free · Telegram में “Request to Join” दबाएँ</small></span><span class="arr">➜</span></a>
-    <span class="free hi">कोई फीस नहीं · No fees · बिगिनर्स के लिए</span>
-  </section>
+  <p class="note">ट्रेडिंग में जोखिम होता है। यह सामग्री केवल शैक्षणिक उद्देश्य के लिए है, निवेश सलाह नहीं।<br>Trading involves risk. Content is for education only, not investment advice.</p>
 
-  <div class="stats">
-    <div class="stat"><b>Hindi + EN</b><span class="hi">आसान भाषा</span></div>
-    <div class="stat"><b>100% Free</b><span class="hi">जॉइन करना फ्री</span></div>
-    <div class="stat"><b>Daily</b><span class="hi">रोज़ की लर्निंग</span></div>
-  </div>
-
-  <div class="info">
-    <h3 class="hi">चैनल में क्या मिलेगा? · What you get</h3>
-    <ul class="hi">
-      <li>म्यूचुअल फंड, शेयर और मार्केट की बेसिक से एडवांस लर्निंग</li>
-      <li>सरल उदाहरण और चार्ट के साथ समझाया गया कंटेंट</li>
-      <li>रिस्क और अनुशासन पर ज़ोर — सिर्फ शिक्षा, कोई गारंटीड रिटर्न नहीं</li>
-      <li>Simple Hindi + English explanations for beginners</li>
-    </ul>
-  </div>
-
-  <div class="join">
-    <h2 class="hi">आज ही सीखना शुरू करें</h2>
-    <p class="hi">Start learning today · 100% फ्री</p>
-    <a class="btn join-link" href="#" rel="noopener"><i class="tag">FREE</i><span class="shine"></span><span class="tgIcon"><svg viewBox="0 0 24 24"><use href="#tg"/></svg></span><span class="lbl"><b class="hi">टेलीग्राम चैनल खोलें</b><small class="hi">Open Telegram · 100% Free</small></span><span class="arr">➜</span></a>
-  </div>
-
-  <div class="disc">
-    <span class="hi">यह सामग्री केवल शिक्षा के उद्देश्य से है। यह निवेश, ट्रेडिंग या वित्तीय सलाह नहीं है। म्यूचुअल फंड और शेयर बाज़ार निवेश बाज़ार जोखिमों के अधीन हैं; किसी भी रिटर्न की गारंटी नहीं है।</span><br>
-    For educational purposes only. Not investment or financial advice. Investments are subject to market risks; no returns are guaranteed.
-  </div>
-</div>
-
-<a class="float join-link" href="#" rel="noopener" aria-label="Join Telegram"><span class="tgIcon"><svg viewBox="0 0 24 24"><use href="#tg"/></svg></span><span>Join Telegram</span></a>
+  <a class="by" href="https://t.me/srsagency" target="_blank" rel="noopener noreferrer">Marketing by : <b>SRS Agency</b></a>
+</main>
 
 <script>
-(() => {
-'use strict';
+(function(){
+  var PID='1413900180923335';
+  var TG=atob('aHR0cHM6Ly90Lm1lLytuOU4tejlqUGRfTm1OREUx');
+  var KEY='w2l_lead_'+PID;
+  var btn=document.getElementById('tg');
+  var label=btn.innerHTML;
+  var t0=Date.now(), busy=false, pixelOn=false;
 
-const CONFIG = Object.freeze({
-  pixelId: '1413900180923335',
-  /* >>> Telegram invite: change ONLY the 3 pieces below if the channel link changes <<< */
-  telegramUrl: ['https://t.me/+','n9N-z9jPd_','NmNDE1'].join(''),
-  telegramInvite: ['n9N-z9jPd_','NmNDE1'].join(''),
-  event: 'Lead',
-  requireTopic: true,    // true = visitor must tap 1 topic chip before Telegram opens (intent check, no typing). false = always open
-  indiaOnly: true,       // Lead only from Indian-timezone devices (kills VPN / foreign bot traffic from the Lead event)
-  ignoreClickMs: 1000,   // tap in first 1s: no Lead
-  minMovePx: 60,
-  minEngagedMs: 1500,
-  minDwellMs: 4000,      // total VISIBLE time before a tap counts as Lead
-  dedupHours: 24,        // one Lead per device per 24h
-  reportFiltered: true
-});
+  // Bot / automation signals: pixel never loads, button never fires
+  var ua=navigator.userAgent||'';
+  var bot=navigator.webdriver===true
+    ||/HeadlessChrome|PhantomJS|Lighthouse|facebookexternalhit|Facebot|bot|crawl|spider|preview/i.test(ua)
+    ||!navigator.languages||!navigator.languages.length;
 
-const ua = navigator.userAgent || '';
-const isAndroid = /Android/i.test(ua);
-const isIOS = /iPhone|iPad|iPod/i.test(ua);
-const inApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram/i.test(ua);
-const isBot = navigator.webdriver === true || /bot|crawl|spider|facebookexternalhit|Facebot|TelegramBot|HeadlessChrome|Lighthouse|PhantomJS|Selenium|Puppeteer|Playwright/i.test(ua);
+  function store(k,v){try{if(v===undefined)return localStorage.getItem(k)||sessionStorage.getItem(k);localStorage.setItem(k,v);sessionStorage.setItem(k,v);}catch(e){}return null;}
 
-let selected = [];
-let sent = false, reported = false, clickedAt = 0;
-
-/* Meta Pixel */
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=true;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=true;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', CONFIG.pixelId);
-
-function eventId() {
-  return 'lead_' + (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random().toString(36).slice(2, 10));
-}
-
-/* ---- topic chooser (optional) ---- */
-const pickBox = document.getElementById('pick');
-document.querySelectorAll('.opt').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const on = btn.getAttribute('aria-pressed') === 'true';
-    btn.setAttribute('aria-pressed', on ? 'false' : 'true');
-    const act = Array.from(document.querySelectorAll('.opt[aria-pressed="true"]'));
-    selected = act.map(b => b.dataset.topic);
-    const hi = act.map(b => b.dataset.hi);
-    pickBox.style.color = ''; chooseBox.classList.remove('need');
-    pickBox.textContent = hi.length ? '✓ चुना गया: ' + hi.join(', ') : '';
-  });
-});
-
-/* ---- one-tap topic requirement (no form, no typing) ---- */
-const chooseBox = document.querySelector('.choose');
-function needTopic() {
-  pickBox.style.color = '#ff9a9a';
-  pickBox.textContent = '👆 पहले अपना विषय चुनें (1 टैप) · Tap a topic first';
-  chooseBox.classList.add('need');
-  chooseBox.classList.remove('shake'); void chooseBox.offsetWidth; chooseBox.classList.add('shake');
-  chooseBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-const IN_INDIA = (() => { try { return /^Asia\/(Kolkata|Calcutta)$/.test(Intl.DateTimeFormat().resolvedOptions().timeZone); } catch (e) { return true; } })();
-
-/* ---- persistent de-dupe ---- */
-const KEY = 'p2l_lead_v2';
-function stored() {
-  let v = null;
-  try { v = localStorage.getItem(KEY); } catch (e) {}
-  if (!v) { const m = document.cookie.match(/(?:^|; )p2l_lead_v2=([^;]*)/); if (m) v = m[1]; }
-  return v;
-}
-function already() { const t = parseInt(stored(), 10); return !!t && (Date.now() - t) < CONFIG.dedupHours * 36e5; }
-function mark() {
-  const v = String(Date.now());
-  try { localStorage.setItem(KEY, v); } catch (e) {}
-  try { document.cookie = KEY + '=' + v + '; max-age=' + (CONFIG.dedupHours * 3600) + '; path=/; SameSite=Lax'; } catch (e) {}
-}
-
-/* ---- engagement tracking ---- */
-const t0 = Date.now();
-let visMs = 0, visSince = document.visibilityState === 'visible' ? Date.now() : 0;
-const visibleMs = () => visMs + (visSince ? Date.now() - visSince : 0);
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') visSince = Date.now();
-  else if (visSince) { visMs += Date.now() - visSince; visSince = 0; }
-});
-
-let moved = 0, firstMoveAt = 0, lastX = null, lastY = null, lastScroll = window.pageYOffset || 0, touchedElsewhere = false;
-function addMove(px) {
-  if (px <= 0) return;
-  moved += px;
-  if (!firstMoveAt && moved >= CONFIG.minMovePx) firstMoveAt = Date.now();
-}
-window.addEventListener('scroll', () => { const y = window.pageYOffset || 0; addMove(Math.abs(y - lastScroll)); lastScroll = y; }, { passive: true });
-function track(e) {
-  const p = (e.touches && e.touches[0]) || e;
-  if (p.clientX == null) return;
-  if (lastX !== null) addMove(Math.abs(p.clientX - lastX) + Math.abs(p.clientY - lastY));
-  lastX = p.clientX; lastY = p.clientY;
-}
-window.addEventListener('pointermove', track, { passive: true });
-window.addEventListener('touchmove', track, { passive: true });
-window.addEventListener('touchend', () => { lastX = null; lastY = null; }, { passive: true });
-window.addEventListener('touchstart', e => {
-  if (!(e.target && e.target.closest && e.target.closest('.join-link'))) touchedElsewhere = true;
-}, { passive: true });
-
-function filterReason(e) {
-  if (e.isTrusted === false) return 'untrusted';
-  if (isBot) return 'bot';
-  if (CONFIG.indiaOnly && !IN_INDIA) return 'non_india';
-  const now = Date.now();
-  if (now - t0 < CONFIG.ignoreClickMs) return 'too_fast';
-  if (visibleMs() < CONFIG.minDwellMs) return 'short_dwell';
-  if (!(moved >= CONFIG.minMovePx || touchedElsewhere)) return 'no_movement';
-  if (moved >= CONFIG.minMovePx && firstMoveAt && now - firstMoveAt < CONFIG.minEngagedMs && !touchedElsewhere) return 'short_engage';
-  if (already()) return 'duplicate';
-  return '';
-}
-
-/* ---- Qualified PageView ---- */
-let pvFired = false, humanSeen = false;
-['touchstart', 'pointerdown', 'keydown', 'scroll', 'mousemove'].forEach(n => window.addEventListener(n, e => { if (e.isTrusted) humanSeen = true; }, { passive: true }));
-setInterval(() => {
-  if (pvFired || isBot || typeof window.fbq !== 'function') return;
-  const t = Date.now() - t0;
-  if (document.visibilityState === 'visible' && ((humanSeen && t >= 3000) || visibleMs() >= 8000)) {
-    pvFired = true;
-    try { fbq('track', 'PageView'); } catch (e) {}
+  // Meta Pixel loads only after real human activity (trusted event), so bots never create PageView/Lead
+  function loadPixel(){
+    if(pixelOn||bot)return; pixelOn=true;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init',PID);
+    fbq('track','PageView');
   }
-}, 500);
-
-/* ---- handoff watchdog ---- */
-let handedOff = false, watchTimer = null;
-const markOff = () => { handedOff = true; };
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') markOff(); });
-window.addEventListener('pagehide', markOff);
-window.addEventListener('blur', markOff);
-function startWatch() {
-  handedOff = false;
-  clearTimeout(watchTimer);
-  watchTimer = setTimeout(() => {
-    const stuck = !handedOff && document.visibilityState === 'visible';
-    try { fbq('trackCustom', 'TgHandoff', { result: stuck ? 'stuck' : 'ok', in_app: inApp ? 1 : 0, os: isAndroid ? 'android' : (isIOS ? 'ios' : 'other') }); } catch (err) {}
-    if (stuck) showFallback();
-  }, 2200);
-}
-
-let href = CONFIG.telegramUrl;
-if (inApp && isAndroid) {
-  href = 'intent://join?invite=' + CONFIG.telegramInvite + '#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=' + encodeURIComponent(CONFIG.telegramUrl) + ';end';
-}
-
-function onJoin(e) {
-  /* scripted / bot clicks: no link, no Lead */
-  if (e.isTrusted === false || isBot) { e.preventDefault(); return; }
-  /* INTENT: Telegram opens only after the visitor taps a topic (1 tap) */
-  if (CONFIG.requireTopic && !selected.length) { e.preventDefault(); needTopic(); return; }
-  /* Invite link is attached only now, at a real human tap (not in the HTML, so scrapers cannot harvest it) */
-  e.currentTarget.setAttribute('href', href);
-  clickedAt = Date.now();
-  startWatch();
-  if (typeof window.fbq !== 'function') return;
-  const reason = filterReason(e);
-  const elapsed = Date.now() - t0;
-  if (!reason && !sent) {
-    try {
-      fbq('track', CONFIG.event, {
-        content_name: 'Learning Machine - Way 2 Labh',
-        content_category: selected.length ? selected.join(', ') : 'Not selected',
-        destination: 'Telegram',
-        value: 0,
-        currency: 'INR',
-        time_on_page: Math.round(elapsed / 1000)
-      }, { eventID: eventId() });
-      sent = true; mark();
-    } catch (err) {}
-  } else if (reason && CONFIG.reportFiltered && !reported) {
-    reported = true;
-    try { fbq('trackCustom', 'FilteredClick', { reason: reason, dwell_ms: Math.round(visibleMs()), moved_px: Math.round(moved) }); } catch (err) {}
-  }
-}
-
-function init() {
-  document.querySelectorAll('.join-link').forEach(a => {
-    a.href = '#';
-    a.addEventListener('click', onJoin);
+  ['touchstart','pointermove','scroll','keydown','mousedown'].forEach(function(ev){
+    window.addEventListener(ev,function h(e){
+      if(!e.isTrusted)return;
+      window.removeEventListener(ev,h,true);
+      loadPixel();
+    },{capture:true,passive:true});
   });
-  if (inApp && isIOS) {
-    const bar = document.createElement('div');
-    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99;background:#ff9f1c;color:#1b1000;font:700 13px/1.4 Manrope,Arial,sans-serif;padding:8px 12px;text-align:center';
-    bar.textContent = 'Telegram न खुले तो ⋯ दबाकर "Open in Browser" चुनें · If Telegram does not open, tap ⋯ → Open in Browser';
-    document.body.appendChild(bar);
-  }
-}
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
-else init();
 
-/* ---- recovery: came back from Telegram -> maybe forgot "Request to Join" ---- */
-let back = null;
-function sheet(html) {
-  if (!back) { back = document.createElement('div'); back.className = 'back'; document.body.appendChild(back); }
-  back.innerHTML = html; back.style.display = 'block';
-}
-function showBack() {
-  if (back || !clickedAt) return;
-  sheet('क्या आपने Telegram में <b>"Request to Join"</b> दबाया?<small>Did you tap "Request to Join"? If not, open it again.</small><a href="' + href + '">फिर से Telegram खोलें · Open Telegram again</a>');
-}
-function showFallback() {
-  sheet('Telegram अपने आप नहीं खुला?<small>Telegram did not open automatically.</small><a href="' + CONFIG.telegramUrl + '">1) Telegram खोलें · Open Telegram</a><a href="#" id="cpyLink" style="background:#132a4a">2) लिंक कॉपी करें · Copy link</a><small>कॉपी करके Telegram या Chrome में खोलें · Paste in Telegram or Chrome</small>');
-  const c = document.getElementById('cpyLink');
-  if (c) c.addEventListener('click', ev => {
-    ev.preventDefault();
-    const done = () => { c.textContent = 'कॉपी हो गया ✓ · Copied'; };
-    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(CONFIG.telegramUrl).then(done, done); }
-    else { try { const t = document.createElement('textarea'); t.value = CONFIG.telegramUrl; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); } catch (x) {} done(); }
+  function go(){
+    if(document.visibilityState!=='visible'){busy=false;return;}
+    loadPixel();
+    if(!store(KEY)){                       // one Lead per device
+      store(KEY,String(Date.now()));
+      var id='lead_'+Date.now()+'_'+Math.random().toString(36).slice(2,10);
+      fbq('track','Lead',{content_name:'Telegram Join'},{eventID:id});
+    }
+    setTimeout(function(){window.location.href=TG;},500); // lets the beacon leave on mobile / in-app browsers
+  }
+
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    if(!e.isTrusted||bot||busy)return;      // blocks scripted/synthetic clicks
+    busy=true; btn.disabled=true;
+    btn.querySelector('span').firstChild.nodeValue='खुल रहा है…';
+    var wait=Math.max(0,1200-(Date.now()-t0)); // ignores instant clicks that no human can make
+    setTimeout(go,wait);
   });
-}
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && clickedAt && Date.now() - clickedAt > 1500) showBack();
-});
-window.addEventListener('pageshow', ev => { if (ev.persisted && clickedAt) showBack(); });
+
+  window.addEventListener('pageshow',function(e){
+    if(e.persisted){busy=false;btn.disabled=false;btn.innerHTML=label;}
+  });
 })();
 </script>
 </body>
