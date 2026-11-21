@@ -127,6 +127,10 @@ fbq('init','40201400946172088');
   .safe { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: var(--muted); }
   .safe svg { width: 14px; height: 14px; color: var(--a); flex: none; }
 
+  .how { margin: 12px auto 0; max-width: 36ch; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.45;
+    background: color-mix(in srgb, var(--b) 14%, transparent); border: 1px solid color-mix(in srgb, var(--b) 45%, transparent); }
+  .how span { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted); }
+
   /* benefits */
   .perks { list-style: none; margin-top: 34px; display: grid; gap: 10px; text-align: left; }
   .perks li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-radius: 16px;
@@ -247,6 +251,7 @@ fbq('init','40201400946172088');
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
       कोई साइनअप नहीं · No signup, opens in Telegram
     </p>
+    <p class="how">बटन दबाने पर Telegram खुलेगा — वहाँ नीचे <b>“REQUEST TO JOIN”</b> ज़रूर दबाएँ।<span lang="en">Telegram will open — tap “Request to Join” at the bottom to get in.</span></p>
 
     <ul class="perks">
       <li>
@@ -431,12 +436,14 @@ fbq('init','40201400946172088');
     }
   }, 500);
 
-  /* ---- links: always live real <a href>; Android in-app browsers get a direct Telegram intent ---- */
+  /* ---- links: always live real <a href>; in-app browsers get a direct Telegram deep link ---- */
   var joinLinks = Array.prototype.slice.call(document.querySelectorAll('.js-join'));
   function inviteHash() { var m = TG_LINK.match(/t\.me\/\+([\w-]+)/); return m ? m[1] : null; }
   function destination() {
-    if (IAB && IS_ANDROID && inviteHash())
-      return 'intent://join?invite=' + inviteHash() + '#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=' + encodeURIComponent(TG_LINK) + ';end';
+    var h = inviteHash();
+    if (IAB && IS_ANDROID && h)
+      return 'intent://join?invite=' + h + '#Intent;scheme=tg;package=org.telegram.messenger;S.browser_fallback_url=' + encodeURIComponent(TG_LINK) + ';end';
+    if (IAB && IS_IOS && h) return 'tg://join?invite=' + h;   // iOS webview cannot use t.me universal links
     return TG_LINK;
   }
   function syncLinks() { var href = destination(); joinLinks.forEach(function (a) { a.setAttribute('href', href); }); }
@@ -449,8 +456,11 @@ fbq('init','40201400946172088');
     });
   });
 
-  /* ---- Lead: once per device per 24h, only for verified humans ---- */
-  var LEAD_KEY = 'w2l_lead_ts', leadSent = false;
+  /* ---- Lead: counted ONLY when the page really hands off to Telegram -------------------------
+     tap -> armed. The Lead is sent when the page goes to background / unloads within LEAD_WINDOW_MS
+     (= Telegram app or t.me really opened). If Telegram did not open, no Lead is counted. */
+  var LEAD_KEY = 'w2l_lead_ts', LEAD_WINDOW_MS = 8000;
+  var leadSent = false, leadResent = false, armedAt = 0, armedId = '', clicked = false, wentHidden = false;
   function recentLead() {
     try { var t = +localStorage.getItem(LEAD_KEY); if (t && Date.now() - t < COOLDOWN_MS) return true; } catch (e) {}
     try { if (sessionStorage.getItem(LEAD_KEY)) return true; } catch (e) {}
@@ -461,7 +471,7 @@ fbq('init','40201400946172088');
     try { sessionStorage.setItem(LEAD_KEY, '1'); } catch (e) {}
   }
   function leadAllowed() {
-    if (leadSent) return false;
+    if (leadSent || armedAt) return false;
     if (TEST) return true;
     if (!eligible()) return false;
     if (!interacted) return false;
@@ -470,28 +480,45 @@ fbq('init','40201400946172088');
     if (recentLead()) return false;
     return true;
   }
-  function tryLead() {
+  function fireLead() {
+    try { fbq('track', 'Lead', { content_name: 'Telegram Channel Join', content_category: CAMPAIGN }, { eventID: armedId }); } catch (err) {}
+  }
+  function armLead() {
     if (!leadAllowed()) return;
-    leadSent = true; markLead();
-    var eventId = 'lead_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
-    try {
-      fbq('track', 'Lead', { content_name: 'Telegram Channel Join', content_category: CAMPAIGN }, { eventID: eventId });
-    } catch (err) {}
+    armedAt = Date.now();
+    armedId = 'lead_' + armedAt + '_' + Math.random().toString(36).slice(2, 10);
+    if (TEST) { leadSent = true; fireLead(); }
+  }
+  function onLeave() {                                   // page hidden / unloaded
+    if (!clicked) return;
+    wentHidden = true;
+    if (armedAt && !leadSent && Date.now() - armedAt <= LEAD_WINDOW_MS) { leadSent = true; markLead(); fireLead(); }
   }
 
   /* ---- step 2 reminder ("Request to Join") ---- */
-  var step2 = document.getElementById('step2'), step2Shown = false, clicked = false;
+  var step2 = document.getElementById('step2'), step2Shown = false;
   function showStep2() { if (step2Shown || !clicked) return; step2Shown = true; step2.hidden = false; }
   document.getElementById('s2close').addEventListener('click', function () { step2.hidden = true; });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden && clicked) setTimeout(showStep2, 400); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') { onLeave(); return; }
+    // user is back: resend the SAME eventID once (Meta de-duplicates) in case the beacon was cut off while backgrounding
+    if (leadSent && !leadResent) { leadResent = true; fireLead(); }
+    if (clicked) setTimeout(showStep2, 400);
+  });
+  window.addEventListener('pagehide', onLeave);
 
   /* ---- the tap ---- */
   function onJoin(e) {
     if (!e.isTrusted) { e.preventDefault(); return; }          // scripted click: no Lead, no navigation
-    tryLead();                                                  // synchronous, never delays the tap
-    if (!clicked) { clicked = true; setTimeout(function () { if (!document.hidden) showStep2(); }, 3500); }
-    // NO preventDefault and NO setTimeout redirect: the real <a href> navigates natively,
-    // so the phone keeps the user-gesture and Telegram opens reliably.
+    armLead();                                                  // synchronous, never delays the tap
+    clicked = true;
+    // NO preventDefault: the real <a href> navigates natively, so the phone keeps the user-gesture.
+    var href = e.currentTarget.getAttribute('href') || '';
+    if (/^(intent|tg):/i.test(href)) {
+      // deep link blocked by the webview? then fall back to the normal t.me page (only if we never left the page)
+      setTimeout(function () { if (!wentHidden && document.visibilityState === 'visible') { location.href = TG_LINK; } }, 3200);
+    }
+    setTimeout(function () { if (!document.hidden) showStep2(); }, 3500);
   }
   joinLinks.forEach(function (a) { a.addEventListener('click', onJoin); });
   syncLinks();
